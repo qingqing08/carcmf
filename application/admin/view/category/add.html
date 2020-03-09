@@ -1,0 +1,32 @@
+<style>
+    .layui-form-label{
+        width: 100px;
+    }
+    .pb50{
+    !important;padding-bottom: 0px;
+    }
+</style>
+<form class="layui-form" action="{:url()}" method="post">
+    <div class="layui-tab-item layui-show">
+        <div class="layui-form-item">
+            <label class="layui-form-label">分类名称</label>
+            <div class="layui-input-inline">
+                <input type="text" class="layui-input" name="name" lay-verify="required" autocomplete="off" placeholder="请输入分类名称">
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-tab-item layui-show">
+        <div class="layui-form-item">
+        </div>
+    </div>
+
+
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button type="submit" class="layui-btn layui-btn-normal" lay-submit="" lay-filter="formSubmit" hisi-data="{pop: true, refresh: true}">提交</button>
+            <a href="javascript:parent.layui.layer.closeAll();" class="layui-btn layui-btn-primary ml10"><i class="aicon ai-fanhui"></i>取消</a>
+        </div>
+    </div>
+</form>
+{include file="block/layui" /}

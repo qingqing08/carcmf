@@ -1,0 +1,125 @@
+<style>
+    .layui-form-label{
+        width: 100px;
+    }
+    .pb50{
+    !important;padding-bottom: 0px;
+    }
+    .layui-layedit{
+        margin-left: 20px;
+    }
+</style>
+<form class="layui-form" action="{:url()}" method="post">
+    <div class="layui-form-item">
+        <label class="layui-form-label">所属实验室</label>
+        <div class="layui-input-inline">
+            <select name="la_id" class="field-type" type="select" lay-filter="type">
+                <option value="">请选择实验室</option>
+                {volist name="laboratory_list" id="vo"}
+                <option value="{$vo.id}">{$vo.laboratory_name}</option>
+                {/volist}
+            </select>
+        </div>
+    </div>
+
+    <div class="layui-tab-item layui-show">
+        <div class="layui-form-item">
+            <label class="layui-form-label">视频名称</label>
+            <div class="layui-input-inline">
+                <input type="text" class="layui-input" name="name" lay-verify="required" autocomplete="off" placeholder="请输入视频名称">
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">视频</label>
+        <div class="layui-input-inline upload">
+            <button type="button" class="layui-btn" id="video"><i class="layui-icon"></i>上传视频</button>
+            <input type="text" style="display:none;" class="upload-input" id="video_file" name="video" value="">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">文档</label>
+        <div class="layui-input-inline upload">
+            <button type="button" class="layui-btn" id="test3"><i class="layui-icon"></i>上传文件</button>
+            <input type="text" style="display: none;" class="upload-input" id="file" name="download" value="">
+        </div>
+    </div>
+
+    <div class="layui-tab-item layui-show">
+        <div class="layui-form-item">
+        </div>
+    </div>
+
+    <div class="layui-form-item layui-form-text">
+        <label class="layui-form-label">详情介绍</label>
+        <div class="layui-input-block">
+            <textarea class="layui-textarea layui-hide" data-type="content" name="" lay-verify="content" id="content"></textarea>
+            <input type="hidden" name="content" value="" id="content_text">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button type="submit" class="layui-btn layui-btn-normal" data-type="content" id="submit" lay-submit="" lay-filter="formSubmit" hisi-data="{pop: true, refresh: true}">提交</button>
+            <a href="javascript:parent.layui.layer.closeAll();" class="layui-btn layui-btn-primary ml10"><i class="aicon ai-fanhui"></i>取消</a>
+        </div>
+    </div>
+</form>
+{include file="block/layui" /}
+
+<script>
+    layui.use(['layedit','upload'], function(){
+        var $ = layui.jquery
+            ,layedit = layui.layedit
+            ,upload = layui.upload;
+
+        //指定允许上传的文件类型
+        upload.render({
+            elem: '#video'
+            ,url: '{:url("admin/laboratory_video/upload_file?type=video")}' //改成您自己的上传接口
+            ,accept: 'file' //普通文件
+            ,done: function(res){
+                layer.msg('上传成功');
+                $("#video_file").val(res.path);
+                $("#video_file").show();
+            }
+        });
+
+        //指定允许上传的文件类型
+        upload.render({
+            elem: '#test3'
+            ,url: '{:url("admin/laboratory_video/upload_file?type=file")}' //改成您自己的上传接口
+            ,accept: 'file' //普通文件
+            ,done: function(res){
+                layer.msg('上传成功');
+                $("#file").val(res.path);
+                $("#file").show();
+            }
+        });
+
+        //创建一个编辑器
+        layedit.set({
+            uploadImage: {
+                url: '{:url("admin/laboratory_video/upload?group=product&thumb=200&water=no")}' //接口url
+            }
+        });
+        var index = layedit.build('content',{
+            height:250,
+        });
+
+        var active = {
+            content: function(){
+                $("#content_text").val(layedit.getContent(index));
+            }
+        };
+
+        $('#submit').on('click', function(){
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        });
+
+
+    });
+</script>
