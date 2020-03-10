@@ -1,4 +1,4 @@
-<?php /*a:6:{s:69:"D:\phpStudy\PHPTutorial\WWW\car\application\admin\view\cases\add.html";i:1583749027;s:66:"D:\phpStudy\PHPTutorial\WWW\car\application\admin\view\layout.html";i:1583749497;s:73:"D:\phpStudy\PHPTutorial\WWW\car\application\system\view\block\header.html";i:1583749497;s:71:"D:\phpStudy\PHPTutorial\WWW\car\application\system\view\block\menu.html";i:1583749497;s:71:"D:\phpStudy\PHPTutorial\WWW\car\application\admin\view\block\layui.html";i:1583749497;s:73:"D:\phpStudy\PHPTutorial\WWW\car\application\system\view\block\footer.html";i:1583749497;}*/ ?>
+<?php /*a:6:{s:69:"D:\phpStudy\PHPTutorial\WWW\car\application\admin\view\cases\add.html";i:1583835086;s:66:"D:\phpStudy\PHPTutorial\WWW\car\application\admin\view\layout.html";i:1583749497;s:73:"D:\phpStudy\PHPTutorial\WWW\car\application\system\view\block\header.html";i:1583749497;s:71:"D:\phpStudy\PHPTutorial\WWW\car\application\system\view\block\menu.html";i:1583749497;s:71:"D:\phpStudy\PHPTutorial\WWW\car\application\admin\view\block\layui.html";i:1583749497;s:73:"D:\phpStudy\PHPTutorial\WWW\car\application\system\view\block\footer.html";i:1583749497;}*/ ?>
 <?php if(input('param.hisi_iframe') || cookie('hisi_iframe')): ?>
 <!DOCTYPE html>
 <html>
@@ -181,26 +181,52 @@ $ca = strtolower(request()->controller().'/'.request()->action());
     .pb50{
     !important;padding-bottom: 0px;
     }
+    .layui-layedit{
+        margin-left: 20px;
+    }
 </style>
 <form class="layui-form" action="<?php echo url(); ?>" method="post">
+    <div class="layui-form-item">
+        <label class="layui-form-label">所属分类</label>
+        <div class="layui-input-inline">
+            <select name="category_id" class="field-type" type="select" lay-filter="type">
+                <option value="">请选择分类</option>
+                <?php if(is_array($category_list) || $category_list instanceof \think\Collection || $category_list instanceof \think\Paginator): $i = 0; $__LIST__ = $category_list;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$vo): $mod = ($i % 2 );++$i;?>
+                <option value="<?php echo htmlentities($vo['id']); ?>"><?php echo htmlentities($vo['category_name']); ?></option>
+                <?php endforeach; endif; else: echo "" ;endif; ?>
+            </select>
+        </div>
+    </div>
+
     <div class="layui-tab-item layui-show">
         <div class="layui-form-item">
-            <label class="layui-form-label">分类名称</label>
+            <label class="layui-form-label">案例名称</label>
             <div class="layui-input-inline">
-                <input type="text" class="layui-input" name="category_name" lay-verify="required" autocomplete="off" placeholder="请输入分类名称">
+                <input type="text" class="layui-input" name="title" lay-verify="required" autocomplete="off" placeholder="请输入案例名称">
             </div>
         </div>
     </div>
 
-    <div class="layui-tab-item layui-show">
-        <div class="layui-form-item">
+    <div class="layui-form-item">
+        <label class="layui-form-label">主图图片</label>
+        <div class="layui-input-inline upload">
+            <button type="button" id="upload" name="image" class="layui-btn layui-btn-primary layui-upload" lay-type="image" lay-data="{ exts:'jpg|png|gif|jpeg|ico', accept:'image'}">请上传图片</button>
+            <input type="hidden" class="upload-input" name="image" value="">
+            <img src="" style="display:none;border-radius:5px;border:1px solid #ccc" width="36" height="36">
         </div>
     </div>
 
+    <div class="layui-form-item layui-form-text">
+        <label class="layui-form-label">详情介绍</label>
+        <div class="layui-input-block">
+            <textarea class="layui-textarea layui-hide" data-type="content" name="" lay-verify="content" id="content"></textarea>
+            <input type="hidden" name="content" value="" id="content_text">
+        </div>
+    </div>
 
     <div class="layui-form-item">
         <div class="layui-input-block">
-            <button type="submit" class="layui-btn layui-btn-normal" lay-submit="" lay-filter="formSubmit" hisi-data="{pop: true, refresh: true}">提交</button>
+            <button type="submit" class="layui-btn layui-btn-normal" data-type="content" id="submit" lay-submit="" lay-filter="formSubmit" hisi-data="{pop: true, refresh: true}">提交</button>
             <a href="javascript:parent.layui.layer.closeAll();" class="layui-btn layui-btn-primary ml10"><i class="aicon ai-fanhui"></i>取消</a>
         </div>
     </div>
@@ -212,6 +238,59 @@ $ca = strtolower(request()->controller().'/'.request()->action());
     	base: '/static/system/js/',
         version: '<?php echo config("hisiphp.version"); ?>'
     }).use('global');
+</script>
+
+<script>
+    layui.use(['layedit','upload'], function(){
+        var $ = layui.jquery
+            ,layedit = layui.layedit
+            ,upload = layui.upload;
+
+        upload.render({
+            elem: '#upload',
+            url: '<?php echo url("system/annex/upload?group=case&thumb=100x100&water=no"); ?>'
+            ,method: 'post'
+            ,before: function(input) {
+                layer.msg('文件上传中...', {time:3000000});
+            },done: function(res, index, upload) {
+                var obj = this.item;
+                if (res.code == 0) {
+                    layer.msg(res.msg);
+                    return false;
+                }
+                layer.closeAll();
+                var input = $(obj).parents('.upload').find('.upload-input');
+                if ($(obj).attr('lay-type') == 'image') {
+                    input.siblings('img').attr('src', res.data.file).show();
+                }
+                input.val(res.data.file);
+            }
+        });
+
+
+        //创建一个编辑器
+        layedit.set({
+            uploadImage: {
+                url: '<?php echo url("admin/cases/upload?group=product&thumb=200&water=no"); ?>' //接口url
+            }
+        });
+        var index = layedit.build('content',{
+            height:250,
+        });
+
+        var active = {
+            content: function(){
+                $("#content_text").val(layedit.getContent(index));
+            }
+        };
+
+        $('#submit').on('click', function(){
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        });
+
+
+    });
 </script>
                     </div>
                 </div>
@@ -239,26 +318,52 @@ $ca = strtolower(request()->controller().'/'.request()->action());
     .pb50{
     !important;padding-bottom: 0px;
     }
+    .layui-layedit{
+        margin-left: 20px;
+    }
 </style>
 <form class="layui-form" action="<?php echo url(); ?>" method="post">
+    <div class="layui-form-item">
+        <label class="layui-form-label">所属分类</label>
+        <div class="layui-input-inline">
+            <select name="category_id" class="field-type" type="select" lay-filter="type">
+                <option value="">请选择分类</option>
+                <?php if(is_array($category_list) || $category_list instanceof \think\Collection || $category_list instanceof \think\Paginator): $i = 0; $__LIST__ = $category_list;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$vo): $mod = ($i % 2 );++$i;?>
+                <option value="<?php echo htmlentities($vo['id']); ?>"><?php echo htmlentities($vo['category_name']); ?></option>
+                <?php endforeach; endif; else: echo "" ;endif; ?>
+            </select>
+        </div>
+    </div>
+
     <div class="layui-tab-item layui-show">
         <div class="layui-form-item">
-            <label class="layui-form-label">分类名称</label>
+            <label class="layui-form-label">案例名称</label>
             <div class="layui-input-inline">
-                <input type="text" class="layui-input" name="category_name" lay-verify="required" autocomplete="off" placeholder="请输入分类名称">
+                <input type="text" class="layui-input" name="title" lay-verify="required" autocomplete="off" placeholder="请输入案例名称">
             </div>
         </div>
     </div>
 
-    <div class="layui-tab-item layui-show">
-        <div class="layui-form-item">
+    <div class="layui-form-item">
+        <label class="layui-form-label">主图图片</label>
+        <div class="layui-input-inline upload">
+            <button type="button" id="upload" name="image" class="layui-btn layui-btn-primary layui-upload" lay-type="image" lay-data="{ exts:'jpg|png|gif|jpeg|ico', accept:'image'}">请上传图片</button>
+            <input type="hidden" class="upload-input" name="image" value="">
+            <img src="" style="display:none;border-radius:5px;border:1px solid #ccc" width="36" height="36">
         </div>
     </div>
 
+    <div class="layui-form-item layui-form-text">
+        <label class="layui-form-label">详情介绍</label>
+        <div class="layui-input-block">
+            <textarea class="layui-textarea layui-hide" data-type="content" name="" lay-verify="content" id="content"></textarea>
+            <input type="hidden" name="content" value="" id="content_text">
+        </div>
+    </div>
 
     <div class="layui-form-item">
         <div class="layui-input-block">
-            <button type="submit" class="layui-btn layui-btn-normal" lay-submit="" lay-filter="formSubmit" hisi-data="{pop: true, refresh: true}">提交</button>
+            <button type="submit" class="layui-btn layui-btn-normal" data-type="content" id="submit" lay-submit="" lay-filter="formSubmit" hisi-data="{pop: true, refresh: true}">提交</button>
             <a href="javascript:parent.layui.layer.closeAll();" class="layui-btn layui-btn-primary ml10"><i class="aicon ai-fanhui"></i>取消</a>
         </div>
     </div>
@@ -270,6 +375,59 @@ $ca = strtolower(request()->controller().'/'.request()->action());
     	base: '/static/system/js/',
         version: '<?php echo config("hisiphp.version"); ?>'
     }).use('global');
+</script>
+
+<script>
+    layui.use(['layedit','upload'], function(){
+        var $ = layui.jquery
+            ,layedit = layui.layedit
+            ,upload = layui.upload;
+
+        upload.render({
+            elem: '#upload',
+            url: '<?php echo url("system/annex/upload?group=case&thumb=100x100&water=no"); ?>'
+            ,method: 'post'
+            ,before: function(input) {
+                layer.msg('文件上传中...', {time:3000000});
+            },done: function(res, index, upload) {
+                var obj = this.item;
+                if (res.code == 0) {
+                    layer.msg(res.msg);
+                    return false;
+                }
+                layer.closeAll();
+                var input = $(obj).parents('.upload').find('.upload-input');
+                if ($(obj).attr('lay-type') == 'image') {
+                    input.siblings('img').attr('src', res.data.file).show();
+                }
+                input.val(res.data.file);
+            }
+        });
+
+
+        //创建一个编辑器
+        layedit.set({
+            uploadImage: {
+                url: '<?php echo url("admin/cases/upload?group=product&thumb=200&water=no"); ?>' //接口url
+            }
+        });
+        var index = layedit.build('content',{
+            height:250,
+        });
+
+        var active = {
+            content: function(){
+                $("#content_text").val(layedit.getContent(index));
+            }
+        };
+
+        $('#submit').on('click', function(){
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        });
+
+
+    });
 </script>
                 </div>
             </div>
@@ -304,26 +462,52 @@ $ca = strtolower(request()->controller().'/'.request()->action());
     .pb50{
     !important;padding-bottom: 0px;
     }
+    .layui-layedit{
+        margin-left: 20px;
+    }
 </style>
 <form class="layui-form" action="<?php echo url(); ?>" method="post">
+    <div class="layui-form-item">
+        <label class="layui-form-label">所属分类</label>
+        <div class="layui-input-inline">
+            <select name="category_id" class="field-type" type="select" lay-filter="type">
+                <option value="">请选择分类</option>
+                <?php if(is_array($category_list) || $category_list instanceof \think\Collection || $category_list instanceof \think\Paginator): $i = 0; $__LIST__ = $category_list;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$vo): $mod = ($i % 2 );++$i;?>
+                <option value="<?php echo htmlentities($vo['id']); ?>"><?php echo htmlentities($vo['category_name']); ?></option>
+                <?php endforeach; endif; else: echo "" ;endif; ?>
+            </select>
+        </div>
+    </div>
+
     <div class="layui-tab-item layui-show">
         <div class="layui-form-item">
-            <label class="layui-form-label">分类名称</label>
+            <label class="layui-form-label">案例名称</label>
             <div class="layui-input-inline">
-                <input type="text" class="layui-input" name="category_name" lay-verify="required" autocomplete="off" placeholder="请输入分类名称">
+                <input type="text" class="layui-input" name="title" lay-verify="required" autocomplete="off" placeholder="请输入案例名称">
             </div>
         </div>
     </div>
 
-    <div class="layui-tab-item layui-show">
-        <div class="layui-form-item">
+    <div class="layui-form-item">
+        <label class="layui-form-label">主图图片</label>
+        <div class="layui-input-inline upload">
+            <button type="button" id="upload" name="image" class="layui-btn layui-btn-primary layui-upload" lay-type="image" lay-data="{ exts:'jpg|png|gif|jpeg|ico', accept:'image'}">请上传图片</button>
+            <input type="hidden" class="upload-input" name="image" value="">
+            <img src="" style="display:none;border-radius:5px;border:1px solid #ccc" width="36" height="36">
         </div>
     </div>
 
+    <div class="layui-form-item layui-form-text">
+        <label class="layui-form-label">详情介绍</label>
+        <div class="layui-input-block">
+            <textarea class="layui-textarea layui-hide" data-type="content" name="" lay-verify="content" id="content"></textarea>
+            <input type="hidden" name="content" value="" id="content_text">
+        </div>
+    </div>
 
     <div class="layui-form-item">
         <div class="layui-input-block">
-            <button type="submit" class="layui-btn layui-btn-normal" lay-submit="" lay-filter="formSubmit" hisi-data="{pop: true, refresh: true}">提交</button>
+            <button type="submit" class="layui-btn layui-btn-normal" data-type="content" id="submit" lay-submit="" lay-filter="formSubmit" hisi-data="{pop: true, refresh: true}">提交</button>
             <a href="javascript:parent.layui.layer.closeAll();" class="layui-btn layui-btn-primary ml10"><i class="aicon ai-fanhui"></i>取消</a>
         </div>
     </div>
@@ -335,6 +519,59 @@ $ca = strtolower(request()->controller().'/'.request()->action());
     	base: '/static/system/js/',
         version: '<?php echo config("hisiphp.version"); ?>'
     }).use('global');
+</script>
+
+<script>
+    layui.use(['layedit','upload'], function(){
+        var $ = layui.jquery
+            ,layedit = layui.layedit
+            ,upload = layui.upload;
+
+        upload.render({
+            elem: '#upload',
+            url: '<?php echo url("system/annex/upload?group=case&thumb=100x100&water=no"); ?>'
+            ,method: 'post'
+            ,before: function(input) {
+                layer.msg('文件上传中...', {time:3000000});
+            },done: function(res, index, upload) {
+                var obj = this.item;
+                if (res.code == 0) {
+                    layer.msg(res.msg);
+                    return false;
+                }
+                layer.closeAll();
+                var input = $(obj).parents('.upload').find('.upload-input');
+                if ($(obj).attr('lay-type') == 'image') {
+                    input.siblings('img').attr('src', res.data.file).show();
+                }
+                input.val(res.data.file);
+            }
+        });
+
+
+        //创建一个编辑器
+        layedit.set({
+            uploadImage: {
+                url: '<?php echo url("admin/cases/upload?group=product&thumb=200&water=no"); ?>' //接口url
+            }
+        });
+        var index = layedit.build('content',{
+            height:250,
+        });
+
+        var active = {
+            content: function(){
+                $("#content_text").val(layedit.getContent(index));
+            }
+        };
+
+        $('#submit').on('click', function(){
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        });
+
+
+    });
 </script>
                     </div>
                 </div>
@@ -350,26 +587,52 @@ $ca = strtolower(request()->controller().'/'.request()->action());
     .pb50{
     !important;padding-bottom: 0px;
     }
+    .layui-layedit{
+        margin-left: 20px;
+    }
 </style>
 <form class="layui-form" action="<?php echo url(); ?>" method="post">
+    <div class="layui-form-item">
+        <label class="layui-form-label">所属分类</label>
+        <div class="layui-input-inline">
+            <select name="category_id" class="field-type" type="select" lay-filter="type">
+                <option value="">请选择分类</option>
+                <?php if(is_array($category_list) || $category_list instanceof \think\Collection || $category_list instanceof \think\Paginator): $i = 0; $__LIST__ = $category_list;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$vo): $mod = ($i % 2 );++$i;?>
+                <option value="<?php echo htmlentities($vo['id']); ?>"><?php echo htmlentities($vo['category_name']); ?></option>
+                <?php endforeach; endif; else: echo "" ;endif; ?>
+            </select>
+        </div>
+    </div>
+
     <div class="layui-tab-item layui-show">
         <div class="layui-form-item">
-            <label class="layui-form-label">分类名称</label>
+            <label class="layui-form-label">案例名称</label>
             <div class="layui-input-inline">
-                <input type="text" class="layui-input" name="category_name" lay-verify="required" autocomplete="off" placeholder="请输入分类名称">
+                <input type="text" class="layui-input" name="title" lay-verify="required" autocomplete="off" placeholder="请输入案例名称">
             </div>
         </div>
     </div>
 
-    <div class="layui-tab-item layui-show">
-        <div class="layui-form-item">
+    <div class="layui-form-item">
+        <label class="layui-form-label">主图图片</label>
+        <div class="layui-input-inline upload">
+            <button type="button" id="upload" name="image" class="layui-btn layui-btn-primary layui-upload" lay-type="image" lay-data="{ exts:'jpg|png|gif|jpeg|ico', accept:'image'}">请上传图片</button>
+            <input type="hidden" class="upload-input" name="image" value="">
+            <img src="" style="display:none;border-radius:5px;border:1px solid #ccc" width="36" height="36">
         </div>
     </div>
 
+    <div class="layui-form-item layui-form-text">
+        <label class="layui-form-label">详情介绍</label>
+        <div class="layui-input-block">
+            <textarea class="layui-textarea layui-hide" data-type="content" name="" lay-verify="content" id="content"></textarea>
+            <input type="hidden" name="content" value="" id="content_text">
+        </div>
+    </div>
 
     <div class="layui-form-item">
         <div class="layui-input-block">
-            <button type="submit" class="layui-btn layui-btn-normal" lay-submit="" lay-filter="formSubmit" hisi-data="{pop: true, refresh: true}">提交</button>
+            <button type="submit" class="layui-btn layui-btn-normal" data-type="content" id="submit" lay-submit="" lay-filter="formSubmit" hisi-data="{pop: true, refresh: true}">提交</button>
             <a href="javascript:parent.layui.layer.closeAll();" class="layui-btn layui-btn-primary ml10"><i class="aicon ai-fanhui"></i>取消</a>
         </div>
     </div>
@@ -381,6 +644,59 @@ $ca = strtolower(request()->controller().'/'.request()->action());
     	base: '/static/system/js/',
         version: '<?php echo config("hisiphp.version"); ?>'
     }).use('global');
+</script>
+
+<script>
+    layui.use(['layedit','upload'], function(){
+        var $ = layui.jquery
+            ,layedit = layui.layedit
+            ,upload = layui.upload;
+
+        upload.render({
+            elem: '#upload',
+            url: '<?php echo url("system/annex/upload?group=case&thumb=100x100&water=no"); ?>'
+            ,method: 'post'
+            ,before: function(input) {
+                layer.msg('文件上传中...', {time:3000000});
+            },done: function(res, index, upload) {
+                var obj = this.item;
+                if (res.code == 0) {
+                    layer.msg(res.msg);
+                    return false;
+                }
+                layer.closeAll();
+                var input = $(obj).parents('.upload').find('.upload-input');
+                if ($(obj).attr('lay-type') == 'image') {
+                    input.siblings('img').attr('src', res.data.file).show();
+                }
+                input.val(res.data.file);
+            }
+        });
+
+
+        //创建一个编辑器
+        layedit.set({
+            uploadImage: {
+                url: '<?php echo url("admin/cases/upload?group=product&thumb=200&water=no"); ?>' //接口url
+            }
+        });
+        var index = layedit.build('content',{
+            height:250,
+        });
+
+        var active = {
+            content: function(){
+                $("#content_text").val(layedit.getContent(index));
+            }
+        };
+
+        $('#submit').on('click', function(){
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        });
+
+
+    });
 </script>
         </div>
 <?php endswitch; if(input('param.hisi_iframe') || cookie('hisi_iframe')): ?>

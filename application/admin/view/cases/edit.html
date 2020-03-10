@@ -5,29 +5,112 @@
     .pb50{
     !important;padding-bottom: 0px;
     }
+    .layui-layedit{
+        margin-left: 20px;
+    }
 </style>
 <form class="layui-form" action="{:url()}" method="post">
+    <div class="layui-form-item">
+        <label class="layui-form-label">所属分类</label>
+        <div class="layui-input-inline">
+            <select name="category_id" class="field-type" type="select" lay-filter="type">
+                <option value="">请选择分类</option>
+                {volist name="category_list" id="vo"}
+                {if condition='$vo.id == $info.category_id'}
+                <option value="{$vo.id}" selected="selected">{$vo.category_name}</option>
+                {else/}
+                <option value="{$vo.id}">{$vo.category_name}</option>
+                {/if}
+                {/volist}
+            </select>
+        </div>
+    </div>
+
     <div class="layui-tab-item layui-show">
         <div class="layui-form-item">
-            <label class="layui-form-label">分类名称</label>
+            <label class="layui-form-label">案例名称</label>
             <div class="layui-input-inline">
-                <input type="text" class="layui-input" name="category_name" lay-verify="required" autocomplete="off" placeholder="请输入分类名称" value="{$info.category_name}">
-                <input type="hidden" name="id" value="{$info.id}">
+                <input type="text" class="layui-input" name="title" value="{$info.title}" lay-verify="required" autocomplete="off" placeholder="请输入案例名称">
+                <input type="hidden" value="{$info.id}" id="id" name="id" />
             </div>
         </div>
     </div>
 
-    <div class="layui-tab-item layui-show">
-        <div class="layui-form-item">
+    <div class="layui-form-item">
+        <label class="layui-form-label">主图图片</label>
+        <div class="layui-input-inline upload">
+            <button type="button" id="upload" name="image" class="layui-btn layui-btn-primary layui-upload" lay-type="image" lay-data="{ exts:'jpg|png|gif|jpeg|ico', accept:'image'}">请上传图片</button>
+            <input type="hidden" class="upload-input" name="image" value="{$info.image}">
+            <img src="{$info.image}" style="display:none;border-radius:5px;border:1px solid #ccc" width="36" height="36">
         </div>
     </div>
 
+    <div class="layui-form-item layui-form-text">
+        <label class="layui-form-label">详情介绍</label>
+        <div class="layui-input-block">
+            <textarea class="layui-textarea layui-hide" data-type="content" name="" lay-verify="content" id="content">{$info.content}</textarea>
+            <input type="hidden" name="content" value="{$info.content}" id="content_text">
+        </div>
+    </div>
 
     <div class="layui-form-item">
         <div class="layui-input-block">
-            <button type="submit" class="layui-btn layui-btn-normal" lay-submit="" lay-filter="formSubmit" hisi-data="{pop: true, refresh: true}">提交</button>
+            <button type="submit" class="layui-btn layui-btn-normal" data-type="content" id="submit" lay-submit="" lay-filter="formSubmit" hisi-data="{pop: true, refresh: true}">提交</button>
             <a href="javascript:parent.layui.layer.closeAll();" class="layui-btn layui-btn-primary ml10"><i class="aicon ai-fanhui"></i>取消</a>
         </div>
     </div>
 </form>
 {include file="block/layui" /}
+
+<script>
+    layui.use(['layedit','upload'], function(){
+        var $ = layui.jquery
+            ,layedit = layui.layedit
+            ,upload = layui.upload;
+
+        upload.render({
+            elem: '#upload',
+            url: '{:url("system/annex/upload?group=case&thumb=100x100&water=no")}'
+            ,method: 'post'
+            ,before: function(input) {
+                layer.msg('文件上传中...', {time:3000000});
+            },done: function(res, index, upload) {
+                var obj = this.item;
+                if (res.code == 0) {
+                    layer.msg(res.msg);
+                    return false;
+                }
+                layer.closeAll();
+                var input = $(obj).parents('.upload').find('.upload-input');
+                if ($(obj).attr('lay-type') == 'image') {
+                    input.siblings('img').attr('src', res.data.file).show();
+                }
+                input.val(res.data.file);
+            }
+        });
+
+
+        //创建一个编辑器
+        layedit.set({
+            uploadImage: {
+                url: '{:url("admin/cases/upload?group=product&thumb=200&water=no")}' //接口url
+            }
+        });
+        var index = layedit.build('content',{
+            height:250,
+        });
+
+        var active = {
+            content: function(){
+                $("#content_text").val(layedit.getContent(index));
+            }
+        };
+
+        $('#submit').on('click', function(){
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        });
+
+
+    });
+</script>

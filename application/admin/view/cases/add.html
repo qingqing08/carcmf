@@ -16,7 +16,7 @@
             <select name="category_id" class="field-type" type="select" lay-filter="type">
                 <option value="">请选择分类</option>
                 {volist name="category_list" id="vo"}
-                <option value="{$vo.id}">{$vo.name}</option>
+                <option value="{$vo.id}">{$vo.category_name}</option>
                 {/volist}
             </select>
         </div>
@@ -24,9 +24,9 @@
 
     <div class="layui-tab-item layui-show">
         <div class="layui-form-item">
-            <label class="layui-form-label">产品名称</label>
+            <label class="layui-form-label">案例名称</label>
             <div class="layui-input-inline">
-                <input type="text" class="layui-input" name="product_name" lay-verify="required" autocomplete="off" placeholder="请输入产品名称">
+                <input type="text" class="layui-input" name="title" lay-verify="required" autocomplete="off" placeholder="请输入案例名称">
             </div>
         </div>
     </div>
@@ -37,39 +37,6 @@
             <button type="button" id="upload" name="image" class="layui-btn layui-btn-primary layui-upload" lay-type="image" lay-data="{ exts:'jpg|png|gif|jpeg|ico', accept:'image'}">请上传图片</button>
             <input type="hidden" class="upload-input" name="image" value="">
             <img src="" style="display:none;border-radius:5px;border:1px solid #ccc" width="36" height="36">
-        </div>
-    </div>
-
-    <div class="layui-form-item">
-        <label class="layui-form-label">产品视频</label>
-        <div class="layui-input-inline upload">
-            <button type="button" class="layui-btn" id="video"><i class="layui-icon"></i>上传视频</button>
-            <input type="text" style="display:none;" class="upload-input" id="video_file" name="video" value="">
-        </div>
-    </div>
-
-    <div class="layui-form-item">
-        <label class="layui-form-label">产品图片</label>
-        <div class="layui-upload">
-            <button type="button" class="layui-btn" id="test2">选择产品图片</button>
-            <blockquote class="layui-elem-quote layui-quote-nm" style="margin-top: 10px; width: 1000px;margin-left: 57px;">
-                预览图：
-                <div class="layui-upload-list" id="demo2"></div>
-            </blockquote>
-            <input type="hidden" class="upload-input" id="images" name="images" value="">
-        </div>
-    </div>
-
-    <div class="layui-form-item">
-        <label class="layui-form-label">文件介绍</label>
-        <div class="layui-input-inline upload">
-            <button type="button" class="layui-btn" id="test3"><i class="layui-icon"></i>上传文件</button>
-            <input type="text" style="display: none;" class="upload-input" id="file" name="file" value="">
-        </div>
-    </div>
-
-    <div class="layui-tab-item layui-show">
-        <div class="layui-form-item">
         </div>
     </div>
 
@@ -98,7 +65,7 @@
 
         upload.render({
             elem: '#upload',
-            url: '{:url("system/annex/upload?group=product&thumb=100x100&water=no")}'
+            url: '{:url("system/annex/upload?group=case&thumb=100x100&water=no")}'
             ,method: 'post'
             ,before: function(input) {
                 layer.msg('文件上传中...', {time:3000000});
@@ -117,57 +84,11 @@
             }
         });
 
-        //多图片上传
-        upload.render({
-            elem: '#test2'
-            ,url: '{:url("admin/product/upload_file?type=images")}' //改成您自己的上传接口
-            ,multiple: true
-            ,before: function(obj){
-                //预读本地文件示例，不支持ie8
-                obj.preview(function(index, file, result){
-                    $('#demo2').append('<img width="100" src="'+ result +'" alt="'+ file.name +'" class="layui-upload-img">')
-                });
-            }
-            ,done: function(res){
-                //上传完毕
-                var images = $("#images").val();
-                if (images == ''){
-                    $("#images").val(images+res.path);
-                } else {
-                    $("#images").val(images+','+res.path);
-                }
-
-            }
-        });
-
-        //指定允许上传的文件类型
-        upload.render({
-            elem: '#video'
-            ,url: '{:url("admin/product/upload_file?type=video")}' //改成您自己的上传接口
-            ,accept: 'file' //普通文件
-            ,done: function(res){
-                layer.msg('上传成功');
-                $("#video_file").val(res.path);
-                $("#video_file").show();
-            }
-        });
-
-        //指定允许上传的文件类型
-        upload.render({
-            elem: '#test3'
-            ,url: '{:url("admin/product/upload_file?type=file")}' //改成您自己的上传接口
-            ,accept: 'file' //普通文件
-            ,done: function(res){
-                layer.msg('上传成功');
-                $("#file").val(res.path);
-                $("#file").show();
-            }
-        });
 
         //创建一个编辑器
         layedit.set({
             uploadImage: {
-                url: '{:url("admin/product/upload?group=product&thumb=200&water=no")}' //接口url
+                url: '{:url("admin/cases/upload?group=product&thumb=200&water=no")}' //接口url
             }
         });
         var index = layedit.build('content',{

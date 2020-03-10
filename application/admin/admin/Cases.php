@@ -22,8 +22,8 @@ class Cases extends Admin
             $data['data'] = Db::table('c_case')->where($where)->page($page)->limit($limit)->order('c_time' , 'desc')->select();
 
             foreach ($data['data'] as $key=>$val){
-                $data['data'][$key]['category_id'] = Db::table('c_case_category')->where('id' , $val['category_id'])->value('name');
-                $data['data'][$key]['image'] = "<img src='".$val['image']."' style='width:100px;' />";
+                $data['data'][$key]['category_id'] = Db::table('c_case_category')->where('id' , $val['category_id'])->value('category_name');
+                $data['data'][$key]['image'] = "<img src='".$val['image']."' style='width:50px;' />";
             }
             $data['count'] = Db::table('c_case')->where($where)->count('id');
             $data['code'] = 0;
@@ -56,7 +56,25 @@ class Cases extends Admin
 
         $category_list = Db::table('c_case_category')->select();
 
+        $this->assign('category_list' , $category_list);
         return $this->fetch();
+    }
+
+    //编辑器上传的图片
+    public function upload($from = 'input', $group = 'sys', $water = '', $thumb = '', $thumb_type = '', $input = 'file'){
+        $arr = AnnexModel::upload($from, $group, $water, $thumb, $thumb_type, $input);
+
+//        print_r($arr);die;
+        if ($arr['code'] == 1){
+            $new_arr = [
+                "code"  =>  0,
+                "msg"   =>  $arr['msg'],
+                "data"  =>  [
+                    "src"   =>  $arr['data']['file'],
+                ],
+            ];
+        }
+        return json($new_arr);
     }
 
     /**
@@ -85,6 +103,9 @@ class Cases extends Admin
 
 
         $this->assign('info' , $info);
+
+        $category_list = Db::table('c_case_category')->select();
+        $this->assign('category_list' , $category_list);
         return $this->fetch();
     }
 
