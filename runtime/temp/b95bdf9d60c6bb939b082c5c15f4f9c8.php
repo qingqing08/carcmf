@@ -1,4 +1,4 @@
-<?php /*a:6:{s:71:"D:\phpStudy\PHPTutorial\WWW\car\application\admin\view\cases\index.html";i:1583749053;s:66:"D:\phpStudy\PHPTutorial\WWW\car\application\admin\view\layout.html";i:1583749497;s:73:"D:\phpStudy\PHPTutorial\WWW\car\application\system\view\block\header.html";i:1583749497;s:71:"D:\phpStudy\PHPTutorial\WWW\car\application\system\view\block\menu.html";i:1583749497;s:71:"D:\phpStudy\PHPTutorial\WWW\car\application\admin\view\block\layui.html";i:1583749497;s:73:"D:\phpStudy\PHPTutorial\WWW\car\application\system\view\block\footer.html";i:1583749497;}*/ ?>
+<?php /*a:6:{s:71:"D:\phpStudy\PHPTutorial\WWW\car\application\admin\view\cases\index.html";i:1583831513;s:66:"D:\phpStudy\PHPTutorial\WWW\car\application\admin\view\layout.html";i:1583749497;s:73:"D:\phpStudy\PHPTutorial\WWW\car\application\system\view\block\header.html";i:1583749497;s:71:"D:\phpStudy\PHPTutorial\WWW\car\application\system\view\block\menu.html";i:1583749497;s:71:"D:\phpStudy\PHPTutorial\WWW\car\application\admin\view\block\layui.html";i:1583749497;s:73:"D:\phpStudy\PHPTutorial\WWW\car\application\system\view\block\footer.html";i:1583749497;}*/ ?>
 <?php if(input('param.hisi_iframe') || cookie('hisi_iframe')): ?>
 <!DOCTYPE html>
 <html>
@@ -219,7 +219,9 @@ $ca = strtolower(request()->controller().'/'.request()->action());
             ,defaultToolbar: ['filter']
             ,cols: [[ //表头
                 {type:'checkbox'}
-                ,{field: 'category_name', title: '分类名称'}
+                ,{field: 'category_id', title: '分类名称'}
+                ,{field: 'title', title: '案例名称'}
+                ,{field: 'image', title: '主图片'}
                 ,{title: '操作', templet: '#buttonTpl'}
 
             ]]
@@ -291,7 +293,9 @@ $ca = strtolower(request()->controller().'/'.request()->action());
             ,defaultToolbar: ['filter']
             ,cols: [[ //表头
                 {type:'checkbox'}
-                ,{field: 'category_name', title: '分类名称'}
+                ,{field: 'category_id', title: '分类名称'}
+                ,{field: 'title', title: '案例名称'}
+                ,{field: 'image', title: '主图片'}
                 ,{title: '操作', templet: '#buttonTpl'}
 
             ]]
@@ -370,7 +374,9 @@ $ca = strtolower(request()->controller().'/'.request()->action());
             ,defaultToolbar: ['filter']
             ,cols: [[ //表头
                 {type:'checkbox'}
-                ,{field: 'category_name', title: '分类名称'}
+                ,{field: 'category_id', title: '分类名称'}
+                ,{field: 'title', title: '案例名称'}
+                ,{field: 'image', title: '主图片'}
                 ,{title: '操作', templet: '#buttonTpl'}
 
             ]]
@@ -430,7 +436,9 @@ $ca = strtolower(request()->controller().'/'.request()->action());
             ,defaultToolbar: ['filter']
             ,cols: [[ //表头
                 {type:'checkbox'}
-                ,{field: 'category_name', title: '分类名称'}
+                ,{field: 'category_id', title: '分类名称'}
+                ,{field: 'title', title: '案例名称'}
+                ,{field: 'image', title: '主图片'}
                 ,{title: '操作', templet: '#buttonTpl'}
 
             ]]

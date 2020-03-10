@@ -19,9 +19,13 @@ class Cases extends Admin
 //            echo $keyword;
             $where[]    = ['1' , 'eq' , 1];
 
-            $data['data'] = Db::table('c_case_category')->where($where)->page($page)->limit($limit)->order('c_time' , 'desc')->select();
+            $data['data'] = Db::table('c_case')->where($where)->page($page)->limit($limit)->order('c_time' , 'desc')->select();
 
-            $data['count'] = Db::table('c_case_category')->where($where)->count('id');
+            foreach ($data['data'] as $key=>$val){
+                $data['data'][$key]['category_id'] = Db::table('c_case_category')->where('id' , $val['category_id'])->value('name');
+                $data['data'][$key]['image'] = "<img src='".$val['image']."' style='width:100px;' />";
+            }
+            $data['count'] = Db::table('c_case')->where($where)->count('id');
             $data['code'] = 0;
             $data['msg'] = '';
             return json($data);
@@ -42,13 +46,16 @@ class Cases extends Admin
 
             $data['c_time'] = time();
 
-            $res = Db::table("c_case_category")->insert($data);
+            $res = Db::table("c_case")->insert($data);
 
             if (!$res) {
                 return $this->error('添加失败');
             }
             return $this->success('添加成功');
         }
+
+        $category_list = Db::table('c_case_category')->select();
+
         return $this->fetch();
     }
 
@@ -65,7 +72,7 @@ class Cases extends Admin
 //            $data['image'] = str_replace('/warehouse/hisiphp/public' , '' , $data['image']);
             $data['c_time'] = time();
 
-            $res = Db::table("c_case_category")->update($data);
+            $res = Db::table("c_case")->update($data);
 
             if (!$res) {
                 return $this->error('修改失败');
@@ -74,7 +81,7 @@ class Cases extends Admin
         }
 
         $id = get_num();
-        $info = Db::table("c_case_category")->where('id' , $id)->find();
+        $info = Db::table("c_case")->where('id' , $id)->find();
 
 
         $this->assign('info' , $info);
@@ -93,7 +100,7 @@ class Cases extends Admin
             $ids = $this->request->post('id');
 
             $id_str = implode(',' , $ids);
-            $res = Db::table('c_case_category')->where('id' , 'in' , $id_str)->delete();
+            $res = Db::table('c_case')->where('id' , 'in' , $id_str)->delete();
             if (!$res){
                 return $this->error('删除失败');
             }
@@ -102,7 +109,7 @@ class Cases extends Admin
         }
         $id = get_num();
 
-        $res = Db::table('c_case_category')->where('id' , $id)->delete();
+        $res = Db::table('c_case')->where('id' , $id)->delete();
         if (!$res){
             return $this->error('删除失败');
         }
