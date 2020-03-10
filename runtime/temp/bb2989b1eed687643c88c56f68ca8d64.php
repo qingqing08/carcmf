@@ -1,4 +1,4 @@
-<?php /*a:1:{s:75:"D:\phpStudy\PHPTutorial\WWW\car\plugins/hisiphp/view/widget/systeminfo.html";i:1565145385;}*/ ?>
+<?php /*a:1:{s:75:"D:\phpStudy\PHPTutorial\WWW\car\plugins/hisiphp/view/widget/systeminfo.html";i:1583749497;}*/ ?>
 <table class="layui-table" lay-skin="line">
         <colgroup>
             <col width="160">
