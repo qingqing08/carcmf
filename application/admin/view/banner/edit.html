@@ -7,13 +7,25 @@
     }
 </style>
 <form class="layui-form" action="{:url()}" method="post">
-    <div class="layui-tab-item layui-show">
-        <div class="layui-form-item">
-            <label class="layui-form-label">链接地址</label>
-            <div class="layui-input-inline">
-                <input type="text" class="layui-input" name="url" lay-verify="required" autocomplete="off" placeholder="请输入链接地址" value="{$info.url}">
-                <input type="hidden" name="id" value="{$info.id}">
-            </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">类型</label>
+        <div class="layui-input-inline">
+            <input type="hidden" value="{$info.id}" name="id">
+            <select name="type" id="type" lay-filter="label" class="select classifySelect">
+                <option value="0">请选择</option>
+                <option value="1">产品</option>
+                <option value="2">实训室</option>
+                <option value="3">院校案例</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">选择数据</label>
+        <div class="layui-input-inline">
+            <select name="data_id" id="data_id" class="field-type" type="select" lay-filter="type">
+
+            </select>
         </div>
     </div>
 
@@ -66,6 +78,37 @@
         });
         // 日期渲染
         laydate.render({elem: '.layui-date'});
+
+        layui.form.on("select(label)",function() {
+            type = $("#type").val();
+            $.ajax({
+                type:"post",
+                url:"get_data.html",
+                data:{type:type},
+                async:false,
+                cache:false,
+                success:function (res) {
+                    // console.log(res);
+                    data_html = '';
+                    $(res).each(function (i) {
+                        if (type == 1){
+                            data_html +="<option value='"+this.id+"'>"+this.product_name+"</option>";
+                        } else if (type == 2){
+                            data_html +="<option value='"+this.id+"'>"+this.laboratory_name+"</option>";
+                        } else if (type == 3){
+                            data_html +="<option value='"+this.id+"'>"+this.title+"</option>";
+                        } else {
+                            data_html = "<option value='0'>请选择类型</option>";
+                        }
+
+                    });
+                    // console.log(cate_html);
+                    $('#data_id').html(data_html);
+                    layui.form.render('select'); //这个很重要
+                }
+            });
+
+        })
     });
 
 

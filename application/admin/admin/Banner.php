@@ -22,6 +22,19 @@ class Banner extends Admin
             $data['data'] = Db::table('c_banner')->where($where)->page($page)->limit($limit)->order('c_time' , 'desc')->select();
             foreach ($data['data'] as $k => $v){
                 $data['data'][$k]['image'] = "<img src='".$v['image']."' style='width:100px;' />";
+                if ($v['type'] == 1){
+                    $data['data'][$k]['data_id'] = Db::table('c_product')->where('id' , $v['data_id'])->value('product_name');
+                    $data['data'][$k]['type'] = '产品';
+                } else if ($v['type'] == 2){
+                    $data['data'][$k]['data_id'] = Db::table('c_laboratory')->where('id' , $v['data_id'])->value('laboratory_name');
+                    $data['data'][$k]['type'] = '实训室';
+                } else if ($v['type'] == 3){
+                    $data['data'][$k]['data_id'] = Db::table('c_case')->where('id' , $v['data_id'])->value('title');
+                    $data['data'][$k]['type'] = '院校案例';
+                } else {
+                    $data['data'][$k]['data_id'] = '未知';
+                    $data['data'][$k]['type'] = '未知';
+                }
             }
             $data['count'] = Db::table('c_banner')->where($where)->count('id');
             $data['code'] = 0;
@@ -53,6 +66,28 @@ class Banner extends Admin
             return $this->success('添加成功');
         }
         return $this->fetch();
+    }
+
+    //根据type类型获取数据
+    function get_data(){
+        $type = $this->request->post('type');
+
+        switch ($type){
+            case 1:
+                $list = Db::table('c_product')->field(['id' , 'product_name'])->select();
+                break;
+            case 2:
+                $list = Db::table('c_laboratory')->field(['id' , 'laboratory_name'])->select();
+                break;
+            case 3:
+                $list = Db::table('c_case')->field(['id' , 'title'])->select();
+                break;
+            case 0:
+                $list = '';
+                break;
+        }
+
+        return $list;
     }
 
     /**
