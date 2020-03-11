@@ -33,6 +33,15 @@
     </div>
 
     <div class="layui-form-item">
+        <label class="layui-form-label">主图图片</label>
+        <div class="layui-input-inline upload">
+            <button type="button" id="upload" name="image" class="layui-btn layui-upload" lay-type="image" lay-data="{ exts:'jpg|png|gif|jpeg|ico', accept:'image'}"><i class="layui-icon"></i>请上传图片</button>
+            <input type="hidden" class="upload-input" name="image" value="{$info.image}">
+            <img src="" style="display:none;border-radius:5px;border:1px solid #ccc" width="36" height="36">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
         <label class="layui-form-label">主视频</label>
         <div class="layui-input-inline upload">
             <button type="button" class="layui-btn" id="video"><i class="layui-icon"></i>请上传视频</button>
@@ -45,6 +54,17 @@
         <div class="layui-input-block">
             <textarea class="layui-textarea layui-hide" data-type="content" name="" lay-verify="content" id="introduction">{$info.introduction}</textarea>
             <input type="hidden" name="introduction" value="{$info.introduction}" id="content_text">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">类别</label>
+        <div class="layui-input-inline">
+            <select name="type" class="field-type" type="select" lay-filter="type">
+                <option value="">请选择分类</option>
+                <option value="1">维修案例</option>
+                <option value="2">产品讲解</option>
+            </select>
         </div>
     </div>
 
@@ -63,6 +83,26 @@
             ,layedit = layui.layedit
             ,upload = layui.upload;
 
+        upload.render({
+            elem: '#upload',
+            url: '{:url("system/annex/upload?group=video&thumb=100x100&water=no")}'
+            ,method: 'post'
+            ,before: function(input) {
+                layer.msg('文件上传中...', {time:3000000});
+            },done: function(res, index, upload) {
+                var obj = this.item;
+                if (res.code == 0) {
+                    layer.msg(res.msg);
+                    return false;
+                }
+                layer.closeAll();
+                var input = $(obj).parents('.upload').find('.upload-input');
+                if ($(obj).attr('lay-type') == 'image') {
+                    input.siblings('img').attr('src', res.data.file).show();
+                }
+                input.val(res.data.file);
+            }
+        });
 
         //指定允许上传的文件类型
         upload.render({

@@ -21,11 +21,16 @@ class Video extends Admin
             $where[]    = ['1' , 'eq' , 1];
 
             $data['data'] = Db::table('c_videos')->where($where)->page($page)->limit($limit)->order('c_time' , 'desc')->select();
-//            foreach ($data['data'] as $k => $v){
-//                $data['data'][$k]['image'] = "<img src='".$v['image']."' style='width:100px;' />";
-//                $category = Db::table('c_product_category')->where('id' , $data['data'][$k]['category_id'])->find();
-//                $data['data'][$k]['category_id'] = $category['name'];
-//            }
+            foreach ($data['data'] as $k => $v){
+                $data['data'][$k]['image'] = "<img src='".$v['image']."' style='width:100px;' />";
+                $data['data'][$k]['vc_id'] = Db::table('c_video_category')->where('id' , $v['vc_id'])->value('name');
+                if ($v['type'] == 1){
+                    $data['data'][$k]['type'] = '维修案例';
+                }
+                if ($v['type'] == 2){
+                    $data['data'][$k]['type'] = '产品讲解';
+                }
+            }
             $data['count'] = Db::table('c_videos')->where($where)->count('id');
             $data['code'] = 0;
             $data['msg'] = '';
