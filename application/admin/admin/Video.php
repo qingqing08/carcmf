@@ -156,4 +156,83 @@ class Video extends Admin
 
         return $this->success('删除成功');
     }
+
+    //设置主推视频列表
+    public function main(){
+        if ($this->request->isAjax()) {
+            $where      = $data = [];
+            $page       = $this->request->param('page/d', 1);
+            $limit      = $this->request->param('limit/d' , 200);
+
+//            echo $keyword;
+            $where[]    = ['1' , 'eq' , 1];
+
+            $data['data'] = Db::table('c_video_main')->where($where)->page($page)->limit($limit)->order('c_time' , 'desc')->select();
+            foreach ($data['data'] as $k => $v){
+                $data['data'][$k]['image'] = "<img src='".$v['image']."' style='width:100px;' />";
+                $data['data'][$k]['data_id'] = Db::table('c_videos')->where('id' , $v['data_id'])->value('video_name');
+            }
+            $data['count'] = Db::table('c_video_main')->where($where)->count('id');
+            $data['code'] = 0;
+            $data['msg'] = '';
+            return json($data);
+        }
+
+        return $this->fetch();
+    }
+
+    /**
+     * 添加主推视频操作
+     * isPost内执行添加操作
+     * 下面是显示添加页面
+     */
+    public function add_main(){
+        if ($this->request->isPost()) {
+            $data = $this->request->post();
+
+            $data['c_time'] = time();
+
+            $res = Db::table("c_video_main")->insert($data);
+
+            if (!$res) {
+                return $this->error('添加失败');
+            }
+            return $this->success('添加成功');
+        }
+
+        $video_list = Db::table('c_videos')->select();
+        $this->assign('video_list' , $video_list);
+        return $this->fetch();
+    }
+
+
+    /**
+     * 编辑主推视频操作
+     * isPost内执行修改操作
+     * get_num()调取公共方法，默认取值为id如有改变参数请填写
+     * 下面是显示修改页面
+     */
+    public function edit_main(){
+        if ($this->request->isPost()) {
+            $data = $this->request->post();
+
+            $data['c_time'] = time();
+
+            $res = Db::table("c_video_main")->update($data);
+
+            if (!$res) {
+                return $this->error('修改失败');
+            }
+            return $this->success('修改成功');
+        }
+
+        $id = get_num();
+        $info = Db::table("c_video_main")->where('id' , $id)->find();
+
+
+        $video_list = Db::table('c_videos')->select();
+        $this->assign('video_list' , $video_list);
+        $this->assign('info' , $info);
+        return $this->fetch();
+    }
 }
