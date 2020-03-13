@@ -31,8 +31,8 @@
 
     <div class="layui-form-item">
         <label class="layui-form-label">图片</label>
-        <div class="layui-input-inline upload">
-            <button type="button" name="upload" class="layui-btn layui-btn-primary layui-upload" lay-type="image" lay-data="{ exts:'jpg|png|gif|jpeg|ico', accept:'image'}">请上传图片</button>
+        <div class="layui-input-inline upload" style="width: 360px;">
+            <button type="button" name="upload" class="layui-btn layui-btn-primary layui-upload" lay-type="image" lay-data="{ exts:'jpg|png|gif|jpeg|ico', accept:'image'}">重新上传图片</button>
             <input type="hidden" class="upload-input" name="image" value="{$info.image}">
             <img src="{$info.image}" style="display:inline;border-radius:5px;border:1px solid #ccc" width="36" height="36">
             <span style="color: #C8C8C8;">&nbsp;&nbsp;上传尺寸(1420*568像素)</span>
