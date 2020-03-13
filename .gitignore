@@ -1,0 +1,7 @@
+composer.lock
+install.lock
+runtime/*
+.idea
+*.log
+.DS_Store
+Thumbs.db
