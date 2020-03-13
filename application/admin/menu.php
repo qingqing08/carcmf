@@ -51,6 +51,18 @@ return [
         'sort' => 1,
         'childs' => [
           [
+            'title' => '实训室分类',
+            'icon' => 'aicon ai-quanping1',
+            'module' => 'admin',
+            'url' => 'admin/laboratoryCategory/index',
+            'param' => '',
+            'target' => '_self',
+            'debug' => 0,
+            'system' => 0,
+            'nav' => 1,
+            'sort' => 0,
+          ],
+          [
             'title' => '实训室列表',
             'icon' => 'typcn typcn-pin-outline',
             'module' => 'admin',
@@ -60,7 +72,7 @@ return [
             'debug' => 0,
             'system' => 0,
             'nav' => 1,
-            'sort' => 0,
+            'sort' => 1,
           ],
           [
             'title' => '实训室系列视频',
@@ -72,7 +84,7 @@ return [
             'debug' => 0,
             'system' => 0,
             'nav' => 1,
-            'sort' => 0,
+            'sort' => 2,
           ],
         ],
       ],

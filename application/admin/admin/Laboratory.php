@@ -62,6 +62,8 @@ class Laboratory extends Admin
             return $this->success('添加成功');
         }
 
+        $category_list = Db::table('c_laboratory_category')->select();
+        $this->assign('category_list' , $category_list);
         return $this->fetch();
     }
 
@@ -95,6 +97,9 @@ class Laboratory extends Admin
         $info = Db::table("c_laboratory")->where('id' , $id)->find();
 
         $this->assign('info' , $info);
+
+        $category_list = Db::table('c_laboratory_category')->select();
+        $this->assign('category_list' , $category_list);
         return $this->fetch();
     }
 
