@@ -22,10 +22,11 @@
 
     <div class="layui-form-item">
         <label class="layui-form-label">主图图片</label>
-        <div class="layui-input-inline upload">
-            <button type="button" id="upload" name="image" class="layui-btn layui-upload" lay-type="image" lay-data="{ exts:'jpg|png|gif|jpeg|ico', accept:'image'}"><i class="layui-icon"></i>请上传图片</button>
+        <div class="layui-input-inline upload" style="width: 330px;">
+            <button type="button" id="upload" name="image" class="layui-btn layui-upload" lay-type="image" lay-data="{ exts:'jpg|png|gif|jpeg|ico', accept:'image'}"><i class="layui-icon"></i>重新上传图片</button>
             <input type="hidden" class="upload-input" name="image" value="{$info.image}">
-            <img src="" style="display:none;border-radius:5px;border:1px solid #ccc" width="36" height="36">
+            <img src="{$info.image}" style="display:inline;border-radius:5px;border:1px solid #ccc" width="36" height="36">
+            <span style="color: #C8C8C8;">&nbsp;&nbsp;上传尺寸(1420*520像素)</span>
         </div>
     </div>
 
@@ -38,17 +39,17 @@
 
     <div class="layui-form-item">
         <label class="layui-form-label">主视频</label>
-        <div class="layui-input-inline upload">
-            <button type="button" class="layui-btn" id="video"><i class="layui-icon"></i>请上传视频</button>
-            <input type="text" style="display:none;" class="upload-input" id="video_file" name="video" value="{$info.video}">
+        <div class="layui-input-inline upload" style="width: 400px;">
+            <button type="button" class="layui-btn" id="video"><i class="layui-icon"></i>重新上传视频</button>
+            <input type="text" style="display:inline;width: 200px;" class="upload-input" id="video_file" name="video" value="{$info.video}">
         </div>
     </div>
 
     <div class="layui-form-item">
         <label class="layui-form-label">主文件</label>
-        <div class="layui-input-inline upload">
-            <button type="button" class="layui-btn" id="test3"><i class="layui-icon"></i>请上传文件</button>
-            <input type="text" style="display: none;" class="upload-input" id="file" name="file" value="{$info.file}">
+        <div class="layui-input-inline upload" style="width: 400px;">
+            <button type="button" class="layui-btn" id="test3"><i class="layui-icon"></i>重新上传文件</button>
+            <input type="text" style="display: inline;width: 200px;" class="upload-input" id="file" name="file" value="{$info.file}">
         </div>
     </div>
 
@@ -57,13 +58,6 @@
         <div class="layui-input-block">
             <textarea class="layui-textarea layui-hide" data-type="content" name="" lay-verify="content" id="content">{$info.content}</textarea>
             <input type="hidden" name="content" value="" id="content_text">
-        </div>
-    </div>
-
-    <div class="layui-form-item">
-        <label class="layui-form-label">设置智慧实验室</label>
-        <div class="layui-input-block">
-            <input type="checkbox" name="is_wisdom" lay-skin="switch" lay-text="是|不是" >
         </div>
     </div>
 
@@ -112,7 +106,7 @@
             ,done: function(res){
                 layer.msg('上传成功');
                 $("#video_file").val(res.path);
-                $("#video_file").show();
+                $("#video_file").css('display' , 'inline');
             }
         });
 
@@ -124,7 +118,7 @@
             ,done: function(res){
                 layer.msg('上传成功');
                 $("#file").val(res.path);
-                $("#file").show();
+                $("#file").css('display' , 'inline');
             }
         });
 
