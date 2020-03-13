@@ -46,11 +46,11 @@ class Laboratory extends Admin
             $data = $this->request->post();
 
 //            return json($data);
-            if ($data['is_wisdom'] == 'on'){
-                $data['is_wisdom'] = 1;
-            } else {
-                $data['is_wisdom'] = 0;
-            }
+//            if ($data['is_wisdom'] == 'on'){
+//                $data['is_wisdom'] = 1;
+//            } else {
+//                $data['is_wisdom'] = 0;
+//            }
 //            $data['image'] = str_replace('/warehouse/hisiphp/public' , '' , $data['image']);
             $data['c_time'] = time();
 
@@ -78,11 +78,11 @@ class Laboratory extends Admin
             $data = $this->request->post();
 
 //            $data['image'] = str_replace('/warehouse/hisiphp/public' , '' , $data['image']);
-            if ($data['is_wisdom'] == 'on'){
-                $data['is_wisdom'] = 1;
-            } else {
-                $data['is_wisdom'] = 0;
-            }
+//            if ($data['is_wisdom'] == 'on'){
+//                $data['is_wisdom'] = 1;
+//            } else {
+//                $data['is_wisdom'] = 0;
+//            }
             $data['c_time'] = time();
 
             $res = Db::table("c_laboratory")->update($data);
