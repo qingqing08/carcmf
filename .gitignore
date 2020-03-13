@@ -1,6 +1,7 @@
 composer.lock
 install.lock
 runtime/*
+public/upload/*
 .idea
 *.log
 .DS_Store
