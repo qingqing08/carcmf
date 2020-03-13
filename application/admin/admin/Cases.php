@@ -2,6 +2,7 @@
 namespace app\admin\admin;
 use app\system\admin\Admin;
 use think\Db;
+use app\common\model\SystemAnnex as AnnexModel;
 
 class Cases extends Admin
 {
