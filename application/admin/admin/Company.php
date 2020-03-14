@@ -23,6 +23,11 @@ class Company extends Admin
 
             $data['data'] = Db::table('c_company')->where($where)->page($page)->limit($limit)->order('c_time' , 'desc')->select();
 
+//            print_r($data['data']);
+//            echo $data['data']['content'];
+//            echo htmlspecialchars_decode($data['data'][0]['content']);
+            $data['data'][0]['content'] = $this->html($data['data'][0]['content']);
+
             $data['count'] = Db::table('c_company')->where($where)->count('id');
             $data['code'] = 0;
             $data['msg'] = '';
@@ -30,6 +35,24 @@ class Company extends Admin
         }
 
         return $this->fetch();
+    }
+
+    public function ClearHtml($content) {
+        $content = preg_replace("/<a[^>]*>/i", "", $content);
+        $content = preg_replace("/<\/a>/i", "", $content);
+        $content = preg_replace("/<div[^>]*>/i", "", $content);
+        $content = preg_replace("/<\/div>/i", "", $content);
+        $content = preg_replace("/<!--[^>]*-->/i", "", $content);//注释内容
+        $content = preg_replace("/style=.+?['|\"]/i",'',$content);//去除样式
+        $content = preg_replace("/class=.+?['|\"]/i",'',$content);//去除样式
+        $content = preg_replace("/id=.+?['|\"]/i",'',$content);//去除样式
+        $content = preg_replace("/lang=.+?['|\"]/i",'',$content);//去除样式
+        $content = preg_replace("/width=.+?['|\"]/i",'',$content);//去除样式
+        $content = preg_replace("/height=.+?['|\"]/i",'',$content);//去除样式
+        $content = preg_replace("/border=.+?['|\"]/i",'',$content);//去除样式
+        $content = preg_replace("/face=.+?['|\"]/i",'',$content);//去除样式
+        $content = preg_replace("/face=.+?['|\"]/",'',$content);//去除样式只允许小写正则匹配没有带 i 参数
+        return $content;
     }
 
 
@@ -97,6 +120,7 @@ class Company extends Admin
         $info = Db::table("c_company")->where('id' , $id)->find();
 
 
+        $info['content'] = $this->html($info['content']);
         $this->assign('info' , $info);
 
         return $this->fetch();
@@ -145,6 +169,7 @@ class Company extends Admin
 
             $data['data'] = Db::table('c_company')->where($where)->page($page)->limit($limit)->order('c_time' , 'desc')->select();
 
+            $data['data'][0]['content'] = $this->html($data['data'][0]['content']);
             $data['count'] = Db::table('c_company')->where($where)->count('id');
             $data['code'] = 0;
             $data['msg'] = '';
@@ -201,7 +226,7 @@ class Company extends Admin
         $id = get_num();
         $info = Db::table("c_company")->where('id' , $id)->find();
 
-
+        $info['content'] = $this->html($info['content']);
         $this->assign('info' , $info);
 
         return $this->fetch();

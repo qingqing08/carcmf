@@ -143,6 +143,12 @@ class Admin extends Common
         }
     }
 
+    public function html($str){
+        $str = strip_tags(htmlspecialchars_decode($str) , '<img>,<p>');
+
+        return $str;
+    }
+
     /**
      * 获取当前方法URL
      * @author 橘子俊 <364666827@qq.com>
