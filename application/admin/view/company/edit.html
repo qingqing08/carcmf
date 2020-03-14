@@ -1,0 +1,70 @@
+<style>
+    .layui-form-label{
+        width: 100px;
+    }
+    .pb50{
+    !important;padding-bottom: 0px;
+    }
+    .layui-layedit{
+        margin-left: 20px;
+    }
+</style>
+<form class="layui-form" action="{:url()}" method="post">
+
+    <div class="layui-tab-item layui-show">
+        <div class="layui-form-item">
+            <label class="layui-form-label">案例名称</label>
+            <div class="layui-input-inline">
+                <input type="text" class="layui-input" name="contact_information" value="{$info.contact_information}" lay-verify="required" autocomplete="off" placeholder="请输入联系方式">
+                <input type="hidden" value="{$info.id}" id="id" name="id" />
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-form-item layui-form-text">
+        <label class="layui-form-label">详情介绍</label>
+        <div class="layui-input-block">
+            <textarea class="layui-textarea layui-hide" data-type="content" name="" lay-verify="content" id="content">{$info.content}</textarea>
+            <input type="hidden" name="content" value="{$info.content}" id="content_text">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button type="submit" class="layui-btn layui-btn-normal" data-type="content" id="submit" lay-submit="" lay-filter="formSubmit" hisi-data="{pop: true, refresh: true}">提交</button>
+            <a href="javascript:parent.layui.layer.closeAll();" class="layui-btn layui-btn-primary ml10"><i class="aicon ai-fanhui"></i>取消</a>
+        </div>
+    </div>
+</form>
+{include file="block/layui" /}
+
+<script>
+    layui.use(['layedit','upload'], function(){
+        var $ = layui.jquery
+            ,layedit = layui.layedit
+            ,upload = layui.upload;
+
+        //创建一个编辑器
+        layedit.set({
+            uploadImage: {
+                url: '{:url("admin/company/upload?group=company&thumb=100x100&water=no")}' //接口url
+            }
+        });
+        var index = layedit.build('content',{
+            height:250,
+        });
+
+        var active = {
+            content: function(){
+                $("#content_text").val(layedit.getContent(index));
+            }
+        };
+
+        $('#submit').on('click', function(){
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        });
+
+
+    });
+</script>
