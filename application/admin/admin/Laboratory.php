@@ -33,6 +33,31 @@ class Laboratory extends Admin
         return $this->fetch();
     }
 
+    //是否在首页展示
+    public function is_wisdom(){
+        if ($this->request->isAjax()) {
+            $where      = $data = [];
+            $id       = $this->request->param('id/d', 1);
+            $value      = $this->request->param('val/d');
+
+//            return $id.'----'.$value;
+//            echo $keyword;
+            $data['id'] = $id;
+            $data['is_wisdom'] = $value;
+
+            $result = Db::table('c_laboratory')->update($data);
+
+            if ($result){
+                $data['code'] = 1;
+                $data['msg'] = '操作成功';
+            } else {
+                $data['code'] = 0;
+                $data['msg'] = '操作失败';
+            }
+
+            return json($data);
+        }
+    }
 
     /**
      * 添加操作

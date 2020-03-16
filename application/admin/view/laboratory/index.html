@@ -3,7 +3,7 @@
 {include file="block/layui" /}
 
 <script type="text/html" id="statusTpl">
-    <input type="checkbox" name="status" value="{{ d.status }}" lay-skin="switch" lay-filter="switchStatus" lay-text="正常|关闭" {{ d.status == 1 ? 'checked' : '' }} data-href="{:url('statusRole')}?id={{ d.id }}">
+    <input type="checkbox" name="is_wisdom" value="{{ d.is_wisdom }}" lay-skin="switch" lay-filter="switchStatus" lay-text="是|否" {{ d.is_wisdom == 1 ? 'checked' : '' }} data-href="{:url('is_wisdom')}?id={{ d.id }}">
 </script>
 
 <script type="text/html" title="操作按钮模板" id="buttonTpl">
@@ -37,6 +37,7 @@
             ,cols: [[ //表头
                 {type:'checkbox'}
                 ,{field: 'laboratory_name', title: '实训室名字'}
+                ,{field: 'is_wisdom', title: '是否展示在首页', width: 200, templet: '#statusTpl'}
                 ,{title: '操作', templet: '#buttonTpl'}
 
             ]]
