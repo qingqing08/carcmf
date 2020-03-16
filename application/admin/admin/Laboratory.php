@@ -44,9 +44,19 @@ class Laboratory extends Admin
 //            echo $keyword;
             $data['id'] = $id;
             $data['is_wisdom'] = $value;
+            $data['c_time'] = time();
+
+            if ($value == 1){
+                $count = Db::table('c_laboratory')->where('is_wisdom' , 1)->count();
+                if ($count == 5) {
+                    $data['code'] = 0;
+                    $data['msg'] = '只能设置5个';
+
+                    return json($data);
+                }
+            }
 
             $result = Db::table('c_laboratory')->update($data);
-
             if ($result){
                 $data['code'] = 1;
                 $data['msg'] = '操作成功';
@@ -54,7 +64,6 @@ class Laboratory extends Admin
                 $data['code'] = 0;
                 $data['msg'] = '操作失败';
             }
-
             return json($data);
         }
     }
