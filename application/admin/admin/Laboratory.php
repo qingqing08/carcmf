@@ -111,7 +111,7 @@ class Laboratory extends Admin
                 "code"  =>  0,
                 "msg"   =>  $arr['msg'],
                 "data"  =>  [
-                    "src"   =>  $arr['data']['file'],
+                    "src"   =>  "http://cmf.qc110.cn".$arr['data']['file'],
                 ],
             ];
         }
