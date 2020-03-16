@@ -102,7 +102,7 @@ class Cases extends Admin
         $id = get_num();
         $info = Db::table("c_case")->where('id' , $id)->find();
 
-
+        $info['content'] = $this->html($info['content']);
         $this->assign('info' , $info);
 
         $category_list = Db::table('c_case_category')->select();

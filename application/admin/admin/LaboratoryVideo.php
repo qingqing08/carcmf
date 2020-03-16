@@ -85,6 +85,7 @@ class LaboratoryVideo extends Admin
         $id = get_num();
         $info = Db::table("c_laboratory_video")->where('id' , $id)->find();
 
+        $info['content'] = $this->html($info['content']);
         //产品分类----list
         $laboratory_list = Db::table('c_laboratory')->select();
         $this->assign('laboratory_list' , $laboratory_list);

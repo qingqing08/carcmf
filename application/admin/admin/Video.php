@@ -88,7 +88,7 @@ class Video extends Admin
         $id = get_num();
         $info = Db::table("c_videos")->where('id' , $id)->find();
 
-
+        $info['introduction'] = $this->html($info['introduction']);
         $category_list = Db::table('c_video_category')->select();
         $this->assign('category_list' , $category_list);
         $this->assign('info' , $info);

@@ -22,9 +22,7 @@ class Laboratory extends Admin
 
             $data['data'] = Db::table('c_laboratory')->where($where)->page($page)->limit($limit)->order('c_time' , 'desc')->select();
 //            foreach ($data['data'] as $k => $v){
-//                $data['data'][$k]['image'] = "<img src='".$v['image']."' style='width:100px;' />";
-//                $category = Db::table('c_product_category')->where('id' , $data['data'][$k]['category_id'])->find();
-//                $data['data'][$k]['category_id'] = $category['name'];
+//                $data['data']['content'] = $this->html($v['content']);
 //            }
             $data['count'] = Db::table('c_laboratory')->where($where)->count('id');
             $data['code'] = 0;
@@ -96,6 +94,7 @@ class Laboratory extends Admin
         $id = get_num();
         $info = Db::table("c_laboratory")->where('id' , $id)->find();
 
+        $info['content'] = $this->html($info['content']);
         $this->assign('info' , $info);
 
         $category_list = Db::table('c_laboratory_category')->select();
