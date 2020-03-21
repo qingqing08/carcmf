@@ -16,11 +16,20 @@ class Video extends Admin
             $where      = $data = [];
             $page       = $this->request->param('page/d', 1);
             $limit      = $this->request->param('limit/d' , 200);
+            $category_id      = $this->request->param('category_id/s');
+            $video_name      = $this->request->param('video_name/s');
 
 //            echo $keyword;
             $where[]    = ['1' , 'eq' , 1];
+            if (!empty($category_id)){
+                $where[] = ['vc_id' , '=' , $category_id];
+            }
+            if (!empty($video_name)){
+                $where[] = ['video_name' , 'like' , '%'.$video_name.'%'];
+            }
 
             $data['data'] = Db::table('c_videos')->where($where)->page($page)->limit($limit)->order('c_time' , 'desc')->select();
+
             foreach ($data['data'] as $k => $v){
                 $data['data'][$k]['image'] = "<img src='".$v['image']."' style='width:100px;' />";
                 $data['data'][$k]['vc_id'] = Db::table('c_video_category')->where('id' , $v['vc_id'])->value('name');
@@ -30,6 +39,7 @@ class Video extends Admin
                 if ($v['type'] == 2){
                     $data['data'][$k]['type'] = '产品讲解';
                 }
+                $data['data'][$k]['video'] = "<a target='_blank' style='text-decoration:underline;' href='".$v['video']."'>点击播放</a>";
             }
             $data['count'] = Db::table('c_videos')->where($where)->count('id');
             $data['code'] = 0;
@@ -37,6 +47,8 @@ class Video extends Admin
             return json($data);
         }
 
+        $category_list = Db::table('c_video_category')->select();
+        $this->assign('category_list' , $category_list);
         return $this->fetch();
     }
 
@@ -104,7 +116,7 @@ class Video extends Admin
                 "code"  =>  0,
                 "msg"   =>  $arr['msg'],
                 "data"  =>  [
-                    "src"   =>  "http://cmf.qc110.cn".$arr['data']['file'],
+                    "src"   =>  "http://cmf.jiaojumoxing.com".$arr['data']['file'],
                 ],
             ];
         }
@@ -115,13 +127,13 @@ class Video extends Admin
 //        var_dump($_FILES["file"]["name"]);
         $file = request()->file('file');
         // 移动到框架应用根目录/uploads/ 目录下
-        $info = $file->move('./upload/laboratory/'.$type.'/');
+        $info = $file->move('./upload/video/'.$type.'/');
 //        echo $info->getSaveName();
 //        die();
         if ( $info ){
             // 成功上传后 获取上传信息
             // 输出 20160820/42a79759f284b767dfcb2a0197904287.jpg
-            return json(['path' => '/upload/laboratory/'.$type.'/' . str_replace('\\','/',$info->getSaveName())]);
+            return json(['path' => '/upload/video/'.$type.'/' . str_replace('\\','/',$info->getSaveName())]);
         } else {
             // 上传失败获取错误信息
             return 'cuowu';

@@ -16,7 +16,11 @@
             <select name="vc_id" class="field-type" type="select" lay-filter="type">
                 <option value="">请选择分类</option>
                 {volist name="category_list" id="vo"}
+                {if condition='$vo.id == $info.vc_id'}
+                <option value="{$vo.id}" selected="selected">{$vo.name}</option>
+                {else/}
                 <option value="{$vo.id}">{$vo.name}</option>
+                {/if}
                 {/volist}
             </select>
         </div>
@@ -32,12 +36,21 @@
         </div>
     </div>
 
+    <div class="layui-tab-item layui-show">
+        <div class="layui-form-item">
+            <label class="layui-form-label">关键字</label>
+            <div class="layui-input-inline">
+                <input type="text" class="layui-input" value="{$info.keyword}" name="keyword" lay-verify="required" autocomplete="off" placeholder="请输入视频库关键字">
+            </div>
+        </div>
+    </div>
+
     <div class="layui-form-item">
         <label class="layui-form-label">主图图片</label>
         <div class="layui-input-inline upload">
             <button type="button" id="upload" name="image" class="layui-btn layui-upload" lay-type="image" lay-data="{ exts:'jpg|png|gif|jpeg|ico', accept:'image'}"><i class="layui-icon"></i>请上传图片</button>
             <input type="hidden" class="upload-input" name="image" value="{$info.image}">
-            <img src="" style="display:none;border-radius:5px;border:1px solid #ccc" width="36" height="36">
+            <img src="{$info.image}" style="display:inline;border-radius:5px;border:1px solid #ccc" width="36" height="36">
         </div>
     </div>
 
@@ -45,7 +58,7 @@
         <label class="layui-form-label">主视频</label>
         <div class="layui-input-inline upload">
             <button type="button" class="layui-btn" id="video"><i class="layui-icon"></i>请上传视频</button>
-            <input type="text" style="display:none;" class="upload-input" id="video_file" name="video" value="{$info.video}">
+            <input type="text" style="display:inline;" class="upload-input" id="video_file" name="video" value="{$info.video}">
         </div>
     </div>
 
@@ -61,9 +74,19 @@
         <label class="layui-form-label">类别</label>
         <div class="layui-input-inline">
             <select name="type" class="field-type" type="select" lay-filter="type">
+                {if condition='$info.type == 1'}
+                <option value="">请选择分类</option>
+                <option value="1" selected="selected">维修案例</option>
+                <option value="2">产品讲解</option>
+                {elseif condition='$info.type == 2'}
                 <option value="">请选择分类</option>
                 <option value="1">维修案例</option>
+                <option value="2" selected="selected">产品讲解</option>
+                {else/}
+                <option value="" selected="selected">请选择分类</option>
+                <option value="1">维修案例</option>
                 <option value="2">产品讲解</option>
+                {/if}
             </select>
         </div>
     </div>

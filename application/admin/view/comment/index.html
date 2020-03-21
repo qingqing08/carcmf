@@ -1,15 +1,18 @@
 <form class="layui-form" action="">
     <div class="layui-form-item" style="margin-bottom: 0px;">
         <div class="layui-inline">
-            <input type="text" class="layui-input" name="video_name" id="video_name" lay-verify="required" autocomplete="off" placeholder="请输入视频名称进行搜索">
+            <select name="type" id="type" lay-filter="label" class="select classifySelect" style="width: 200px;">
+                <option value="">请选择来源</option>
+                <!--<option value="1">产品</option>-->
+                <option value="2">实训室</option>
+                <option value="3">案例</option>
+                <option value="4">视频库</option>
+            </select>
         </div>
         <div class="layui-inline">
-            <select name="category_id" id="category_id" lay-filter="label" class="select classifySelect" style="width: 200px;">
-                <option value="">请选择分类</option>
-                {volist name="category_list" id="vo"}
-                <option value="{$vo.id}">{$vo.name}</option>
-                {/volist}
-            </select>
+            <div class="layui-input-inline">
+                <input type="text" class="layui-input" id="search_date" placeholder=" - ">
+            </div>
         </div>
         <div class="layui-inline">
             <div class="layui-btn layui-btn-normal" onclick="search()">搜 索</div>
@@ -26,13 +29,12 @@
 </script>
 
 <script type="text/html" title="操作按钮模板" id="buttonTpl">
-    <a href="{:url('edit')}?id={{ d.id }}" class="layui-btn layui-btn-xs layui-btn-normal j-iframe-pop" hisi-data="{width: '850px', height: '600px'}">修改</a>
     <a href="{:url('del')}?id={{ d.id }}" class="layui-btn layui-btn-xs layui-btn-danger j-tr-del">删除</a>
 </script>
 
 <script type="text/html" id="toolbar">
     <div class="layui-btn-group fl">
-        <a href="{:url('add')}" class="layui-btn layui-btn-primary layui-btn-sm layui-icon layui-icon-add-circle-fine j-iframe-pop"  hisi-data="{width: '850px', height: '600px'}">&nbsp;添加</a>
+        <a href="{:url('add')}" class="layui-btn layui-btn-primary layui-btn-sm layui-icon layui-icon-add-circle-fine j-iframe-pop" hisi-data="{width: '750px', height: '570px'}">&nbsp;添加</a>
         <a data-href="{:url('del')}" class="layui-btn layui-btn-primary layui-btn-sm j-page-btns confirm layui-icon layui-icon-close red">&nbsp;删除</a>
     </div>
 </script>
@@ -40,8 +42,9 @@
 <!--<script src="/warehouse/hisiphp/public/static/js/jquery.2.1.4.min.js"></script>-->
 
 <script type="text/javascript">
-    layui.use(['table'], function() {
-        var table = layui.table;
+    layui.use(['table' , 'laydate'], function() {
+        var table = layui.table,
+            laydate = layui.laydate;
         table.render({
             elem: '#dataTable'
             ,url: '{:url()}' //数据接口
@@ -51,32 +54,37 @@
             ,text: {
                 none : '暂无相关数据'
             }
-            ,toolbar: '#toolbar'
+            // ,toolbar: '#toolbar'
             ,defaultToolbar: ['filter']
             ,cols: [[ //表头
                 {type:'checkbox'}
-                ,{field: 'vc_id', title: '所属分类'}
-                ,{field: 'type', title: '视频类型'}
-                ,{field: 'video_name', title: '视频资源名字'}
-                ,{field: 'image', title: '视频主图'}
-                ,{field: 'video', title: '视频地址'}
-                ,{field: 'keyword', title: '关键字'}
-                ,{field: 'watch_number', title: '观看次数'}
-                ,{field: 'fabulous_number', title: '点赞次数'}
+                ,{field: 'user_id', title: '评论人'}
+                ,{field: 'data_id', title: '数据名称'}
+                ,{field: 'type', title: '来源'}
+                ,{field: 'content', title: '内容'}
+                ,{field: 'c_time', title: '评论时间'}
                 ,{title: '操作', templet: '#buttonTpl'}
+
             ]]
         });
 
+        //日期时间范围
+        laydate.render({
+            elem: '#search_date'
+            ,type: 'date'
+            ,range: true
+            ,format: 'yyyy/MM/dd'
+        });
     });
 
     function search(){
-        var video_name = $("#video_name").val();
-        var category_id = $("#category_id").val();
+        var type = $("#type").val();
+        var date = $("#search_date").val();
 
         $.ajax({
             type:"post",
             url:"index",
-            data:{video_name:video_name,category_id:category_id},
+            data:{type:type,date:date},
             cache:false,
             async:false,
             success:function (res) {
@@ -94,15 +102,13 @@
                         ,defaultToolbar: ['filter']
                         ,cols: [[ //表头
                             {type:'checkbox'}
-                            ,{field: 'vc_id', title: '所属分类'}
-                            ,{field: 'type', title: '视频类型'}
-                            ,{field: 'video_name', title: '视频资源名字'}
-                            ,{field: 'image', title: '视频主图'}
-                            ,{field: 'video', title: '视频地址'}
-                            ,{field: 'keyword', title: '关键字'}
-                            ,{field: 'watch_number', title: '观看次数'}
-                            ,{field: 'fabulous_number', title: '点赞次数'}
+                            ,{field: 'user_id', title: '评论人'}
+                            ,{field: 'data_id', title: '数据名称'}
+                            ,{field: 'type', title: '来源'}
+                            ,{field: 'content', title: '内容'}
+                            ,{field: 'c_time', title: '评论时间'}
                             ,{title: '操作', templet: '#buttonTpl'}
+
                         ]]
                         ,data:res.data
                     });

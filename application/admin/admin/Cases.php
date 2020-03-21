@@ -35,6 +35,38 @@ class Cases extends Admin
         return $this->fetch();
     }
 
+    //是否在首页展示
+    public function status(){
+        if ($this->request->isAjax()) {
+            $id       = $this->request->param('id/d', 1);
+            $value      = $this->request->param('val/d');
+
+            $data['id'] = $id;
+            $data['status'] = $value;
+            $data['c_time'] = time();
+
+            if ($value == 1){
+                $count = Db::table('c_case')->where('status' , 1)->count();
+                if ($count == 5) {
+                    $data['code'] = 0;
+                    $data['msg'] = '只能设置5个';
+
+                    return json($data);
+                }
+            }
+
+            $result = Db::table('c_case')->update($data);
+            if ($result){
+                $data['code'] = 1;
+                $data['msg'] = '操作成功';
+            } else {
+                $data['code'] = 0;
+                $data['msg'] = '操作失败';
+            }
+            return json($data);
+        }
+    }
+
 
     /**
      * 添加操作
@@ -71,7 +103,7 @@ class Cases extends Admin
                 "code"  =>  0,
                 "msg"   =>  $arr['msg'],
                 "data"  =>  [
-                    "src"   =>  "http://cmf.qc110.cn".$arr['data']['file'],
+                    "src"   =>  "http://cmf.jiaojumoxing.com".$arr['data']['file'],
                 ],
             ];
         }

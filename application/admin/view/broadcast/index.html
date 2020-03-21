@@ -3,17 +3,17 @@
 {include file="block/layui" /}
 
 <script type="text/html" id="statusTpl">
-    <input type="checkbox" name="status" value="{{ d.status }}" lay-skin="switch" lay-filter="switchStatus" lay-text="正常|关闭" {{ d.status == 1 ? 'checked' : '' }} data-href="{:url('status')}?id={{ d.id }}">
+    <input type="checkbox" name="status" value="{{ d.status }}" lay-skin="switch" lay-filter="switchStatus" lay-text="开启|关闭" {{ d.status == 1 ? 'checked' : '' }} data-href="{:url('status')}?id={{ d.id }}">
 </script>
 
 <script type="text/html" title="操作按钮模板" id="buttonTpl">
-    <a href="{:url('edit')}?id={{ d.id }}" class="layui-btn layui-btn-xs layui-btn-normal j-iframe-pop" hisi-data="{width: '750px', height: '570px'}">修改</a>
+    <a href="{:url('edit')}?id={{ d.id }}" class="layui-btn layui-btn-xs layui-btn-normal j-iframe-pop" hisi-data="{width: '850px', height: '600px'}">修改</a>
     <a href="{:url('del')}?id={{ d.id }}" class="layui-btn layui-btn-xs layui-btn-danger j-tr-del">删除</a>
 </script>
 
 <script type="text/html" id="toolbar">
     <div class="layui-btn-group fl">
-        <a href="{:url('add')}" class="layui-btn layui-btn-primary layui-btn-sm layui-icon layui-icon-add-circle-fine j-iframe-pop" hisi-data="{width: '750px', height: '570px'}">&nbsp;添加</a>
+        <a href="{:url('add')}" class="layui-btn layui-btn-primary layui-btn-sm layui-icon layui-icon-add-circle-fine j-iframe-pop"  hisi-data="{width: '850px', height: '600px'}">&nbsp;添加</a>
         <a data-href="{:url('del')}" class="layui-btn layui-btn-primary layui-btn-sm j-page-btns confirm layui-icon layui-icon-close red">&nbsp;删除</a>
     </div>
 </script>
@@ -36,10 +36,11 @@
             ,defaultToolbar: ['filter']
             ,cols: [[ //表头
                 {type:'checkbox'}
-                ,{field: 'category_id', title: '分类名称'}
-                ,{field: 'title', title: '案例名称'}
-                ,{field: 'image', title: '主图片'}
-                ,{field: 'status', title: '是否展示在首页', width: 200, templet: '#statusTpl'}
+                ,{field: 'name', title: '实景名称'}
+                ,{field: 'image', title: '实景图片'}
+                ,{field: 'url', title: '直播地址'}
+                ,{field: 'video', title: '录播视频'}
+                ,{field: 'status', title: '是否开启录播', width: 200, templet: '#statusTpl'}
                 ,{title: '操作', templet: '#buttonTpl'}
 
             ]]

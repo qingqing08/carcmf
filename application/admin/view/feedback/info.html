@@ -1,0 +1,31 @@
+<style>
+    .layui-form-label{
+        width: 100px;
+    }
+    .pb50{
+    !important;padding-bottom: 0px;
+    }
+</style>
+<form class="layui-form" action="{:url()}" method="post">
+    <div class="layui-tab-item layui-show">
+        <div class="layui-form-item">
+            <label class="layui-form-label">反馈内容</label>
+            <div class="layui-input-inline">
+                <p style="margin-top: 10px;">{$info.content}</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-tab-item layui-show">
+        <div class="layui-form-item">
+        </div>
+    </div>
+
+
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <a href="javascript:parent.layui.layer.closeAll();" class="layui-btn layui-btn-primary ml10"><i class="aicon ai-fanhui"></i>取消</a>
+        </div>
+    </div>
+</form>
+{include file="block/layui" /}

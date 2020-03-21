@@ -10,38 +10,17 @@
     }
 </style>
 <form class="layui-form" action="{:url()}" method="post">
-    <div class="layui-form-item">
-        <label class="layui-form-label">所属分类</label>
-        <div class="layui-input-inline">
-            <select name="vc_id" class="field-type" type="select" lay-filter="type">
-                <option value="">请选择分类</option>
-                {volist name="category_list" id="vo"}
-                <option value="{$vo.id}">{$vo.name}</option>
-                {/volist}
-            </select>
-        </div>
-    </div>
-
     <div class="layui-tab-item layui-show">
         <div class="layui-form-item">
-            <label class="layui-form-label">视频库名称</label>
+            <label class="layui-form-label">实景名称</label>
             <div class="layui-input-inline">
-                <input type="text" class="layui-input" name="video_name" lay-verify="required" autocomplete="off" placeholder="请输入视频库名称">
-            </div>
-        </div>
-    </div>
-
-    <div class="layui-tab-item layui-show">
-        <div class="layui-form-item">
-            <label class="layui-form-label">关键字</label>
-            <div class="layui-input-inline">
-                <input type="text" class="layui-input" name="keyword" lay-verify="required" autocomplete="off" placeholder="请输入视频库关键字">
+                <input type="text" class="layui-input" name="name" lay-verify="required" autocomplete="off" placeholder="请输入实景名称">
             </div>
         </div>
     </div>
 
     <div class="layui-form-item">
-        <label class="layui-form-label">主图图片</label>
+        <label class="layui-form-label">实景图片</label>
         <div class="layui-input-inline upload">
             <button type="button" id="upload" name="image" class="layui-btn layui-upload" lay-type="image" lay-data="{ exts:'jpg|png|gif|jpeg|ico', accept:'image'}"><i class="layui-icon"></i>请上传图片</button>
             <input type="hidden" class="upload-input" name="image" value="">
@@ -50,29 +29,19 @@
     </div>
 
     <div class="layui-form-item">
-        <label class="layui-form-label">主视频</label>
+        <label class="layui-form-label">实景视频</label>
         <div class="layui-input-inline upload">
             <button type="button" class="layui-btn" id="video"><i class="layui-icon"></i>请上传视频</button>
             <input type="text" style="display:none;" class="upload-input" id="video_file" name="video" value="">
         </div>
     </div>
 
-    <div class="layui-form-item layui-form-text">
-        <label class="layui-form-label">视频简介</label>
-        <div class="layui-input-block">
-            <textarea class="layui-textarea layui-hide" data-type="content" name="" lay-verify="content" id="introduction"></textarea>
-            <input type="hidden" name="introduction" value="" id="content_text">
-        </div>
-    </div>
-
-    <div class="layui-form-item">
-        <label class="layui-form-label">类别</label>
-        <div class="layui-input-inline">
-            <select name="type" class="field-type" type="select" lay-filter="type">
-                <option value="">请选择分类</option>
-                <option value="1">维修案例</option>
-                <option value="2">产品讲解</option>
-            </select>
+    <div class="layui-tab-item layui-show">
+        <div class="layui-form-item">
+            <label class="layui-form-label">直播地址</label>
+            <div class="layui-input-inline">
+                <input type="text" class="layui-input" name="url" lay-verify="required" autocomplete="off" placeholder="请输入直播地址">
+            </div>
         </div>
     </div>
 
@@ -94,7 +63,7 @@
 
         upload.render({
             elem: '#upload',
-            url: '{:url("system/annex/upload?group=video&thumb=100x100&water=no")}'
+            url: '{:url("system/annex/upload?group=broadcast&thumb=100x100&water=no")}'
             ,method: 'post'
             ,before: function(input) {
                 layer.msg('文件上传中...', {time:3000000});
@@ -116,34 +85,13 @@
         //指定允许上传的文件类型
         upload.render({
             elem: '#video'
-            ,url: '{:url("admin/video/upload_file?type=video")}' //改成您自己的上传接口
+            ,url: '{:url("admin/broadcast/upload_file?type=video")}' //改成您自己的上传接口
             ,accept: 'file' //普通文件
             ,done: function(res){
                 layer.msg('上传成功');
                 $("#video_file").val(res.path);
                 $("#video_file").show();
             }
-        });
-
-        //创建一个编辑器
-        layedit.set({
-            uploadImage: {
-                url: '{:url("admin/video/upload?group=video&thumb=200&water=no")}' //接口url
-            }
-        });
-        var index = layedit.build('introduction',{
-            height:250,
-        });
-
-        var active = {
-            content: function(){
-                $("#content_text").val(layedit.getContent(index));
-            }
-        };
-
-        $('#submit').on('click', function(){
-            var type = $(this).data('type');
-            active[type] ? active[type].call(this) : '';
         });
 
 

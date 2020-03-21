@@ -1,0 +1,27 @@
+<style>
+    .layui-form-label{
+        width: 100px;
+    }
+    .pb50{
+    !important;padding-bottom: 0px;
+    }
+    .layui-layedit{
+        margin-left: 20px;
+    }
+</style>
+<form class="layui-form" action="{:url()}" method="post">
+    <div class="layui-form-item layui-form-text">
+        <label class="layui-form-label">联系电话</label>
+        <div class="layui-input-block">
+            <input type="text" style="width:200px;" class="layui-input" name="tel" lay-verify="required" autocomplete="off" placeholder="请输入联系电话">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button type="submit" class="layui-btn layui-btn-normal" data-type="content" id="submit" lay-submit="" lay-filter="formSubmit" hisi-data="{pop: true, refresh: true}">提交</button>
+            <a href="javascript:parent.layui.layer.closeAll();" class="layui-btn layui-btn-primary ml10"><i class="aicon ai-fanhui"></i>取消</a>
+        </div>
+    </div>
+</form>
+{include file="block/layui" /}

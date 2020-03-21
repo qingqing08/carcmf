@@ -1,3 +1,19 @@
+<form class="layui-form" action="">
+    <div class="layui-form-item" style="margin-bottom: 0px;">
+        <div class="layui-inline">
+            <select name="category_id" id="category_id" lay-filter="label" class="select classifySelect" style="width: 200px;">
+                <option value="">请选择分类</option>
+                {volist name="category_list" id="vo"}
+                <option value="{$vo.id}">{$vo.category_name}</option>
+                {/volist}
+            </select>
+        </div>
+        <div class="layui-inline">
+            <div class="layui-btn layui-btn-normal" onclick="search()">搜 索</div>
+        </div>
+    </div>
+</form>
+
 <table id="dataTable" lay-filter="dataTable"></table>
 
 {include file="block/layui" /}
@@ -36,7 +52,11 @@
             ,defaultToolbar: ['filter']
             ,cols: [[ //表头
                 {type:'checkbox'}
+                ,{field: 'category_id', title: '所属分类'}
                 ,{field: 'laboratory_name', title: '实训室名字'}
+                ,{field: 'image', title: '封面图'}
+                ,{field: 'video', title: '视频地址'}
+                ,{field: 'file', title: '文件地址'}
                 ,{field: 'is_wisdom', title: '是否展示在首页', width: 200, templet: '#statusTpl'}
                 ,{title: '操作', templet: '#buttonTpl'}
 
@@ -44,4 +64,45 @@
         });
 
     });
+
+    function search(){
+        var category_id = $("#category_id").val();
+
+        $.ajax({
+            type:"post",
+            url:"index",
+            data:{category_id:category_id},
+            cache:false,
+            async:false,
+            success:function (res) {
+                layui.use(['table'], function() {
+                    var table = layui.table;
+                    table.render({
+                        elem: '#dataTable'
+                        ,page: true //开启分页
+                        ,skin: 'row'
+                        ,even: true
+                        ,text: {
+                            none : '暂无相关数据'
+                        }
+                        ,toolbar: '#toolbar'
+                        ,defaultToolbar: ['filter']
+                        ,cols: [[ //表头
+                            {type:'checkbox'}
+                            ,{field: 'category_id', title: '所属分类'}
+                            ,{field: 'laboratory_name', title: '实训室名字'}
+                            ,{field: 'image', title: '封面图'}
+                            ,{field: 'video', title: '视频地址'}
+                            ,{field: 'file', title: '文件地址'}
+                            ,{field: 'is_wisdom', title: '是否展示在首页', width: 200, templet: '#statusTpl'}
+                            ,{title: '操作', templet: '#buttonTpl'}
+
+                        ]]
+                        ,data:res.data
+                    });
+
+                });
+            }
+        })
+    }
 </script>

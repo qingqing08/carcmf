@@ -16,20 +16,29 @@ class Laboratory extends Admin
             $where      = $data = [];
             $page       = $this->request->param('page/d', 1);
             $limit      = $this->request->param('limit/d' , 200);
+            $category_id      = $this->request->param('category_id/d');
 
 //            echo $keyword;
             $where[]    = ['1' , 'eq' , 1];
+            if (!empty($category_id)){
+                $where[]    = ['category_id' , '=' , $category_id];
+            }
 
             $data['data'] = Db::table('c_laboratory')->where($where)->page($page)->limit($limit)->order('c_time' , 'desc')->select();
-//            foreach ($data['data'] as $k => $v){
-//                $data['data']['content'] = $this->html($v['content']);
-//            }
+            foreach ($data['data'] as $k => $v){
+                $data['data'][$k]['category_id'] = Db::table('c_laboratory_category')->where('id' , $v['category_id'])->value('category_name');
+                $data['data'][$k]['image'] = "<img src='".$v['image']."' style='width:100px;' />";
+                $data['data'][$k]['video'] = "<a target='_blank' style='text-decoration:underline;' href='".$v['video']."'>点击播放</a>";
+                $data['data'][$k]['file'] = "<a target='_blank' style='text-decoration:underline;' href='".$v['file']."'>点击查看</a>";
+            }
             $data['count'] = Db::table('c_laboratory')->where($where)->count('id');
             $data['code'] = 0;
             $data['msg'] = '';
             return json($data);
         }
 
+        $category_list = Db::table('c_laboratory_category')->select();
+        $this->assign('category_list' , $category_list);
         return $this->fetch();
     }
 
@@ -145,7 +154,7 @@ class Laboratory extends Admin
                 "code"  =>  0,
                 "msg"   =>  $arr['msg'],
                 "data"  =>  [
-                    "src"   =>  "http://cmf.qc110.cn".$arr['data']['file'],
+                    "src"   =>  "http://cmf.jiaojumoxing.com".$arr['data']['file'],
                 ],
             ];
         }

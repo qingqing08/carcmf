@@ -6,10 +6,10 @@
     <input type="checkbox" name="status" value="{{ d.status }}" lay-skin="switch" lay-filter="switchStatus" lay-text="正常|关闭" {{ d.status == 1 ? 'checked' : '' }} data-href="{:url('statusRole')}?id={{ d.id }}">
 </script>
 
-<!--<script type="text/html" title="操作按钮模板" id="buttonTpl">-->
-    <!--<a href="{:url('edit')}?id={{ d.id }}" class="layui-btn layui-btn-xs layui-btn-normal j-iframe-pop" hisi-data="{width: '750px', height: '570px'}">修改</a>-->
-    <!--<a href="{:url('del')}?id={{ d.id }}" class="layui-btn layui-btn-xs layui-btn-danger j-tr-del">删除</a>-->
-<!--</script>-->
+<script type="text/html" title="操作按钮模板" id="buttonTpl">
+    <a href="{:url('info')}?id={{ d.id }}" class="layui-btn layui-btn-xs layui-btn-normal j-iframe-pop" hisi-data="{width: '750px', height: '570px'}">查看</a>
+    <a href="{:url('del')}?id={{ d.id }}" class="layui-btn layui-btn-xs layui-btn-danger j-tr-del">删除</a>
+</script>
 
 <!--<script type="text/html" id="toolbar">-->
     <!--<div class="layui-btn-group fl">-->
@@ -40,8 +40,8 @@
                 ,{field: 'tel', title: '电话'}
                 ,{field: 'email', title: '邮箱'}
                 ,{field: 'title', title: '标题'}
-                ,{field: 'content', title: '反馈内容'}
-                // ,{title: '操作', templet: '#buttonTpl'}
+                // ,{field: 'content', title: '反馈内容'}
+                ,{title: '操作', templet: '#buttonTpl'}
 
             ]]
         });
