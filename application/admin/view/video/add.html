@@ -42,18 +42,19 @@
 
     <div class="layui-form-item">
         <label class="layui-form-label">主图图片</label>
-        <div class="layui-input-inline upload">
+        <div class="layui-input-inline upload" style="width: 330px;">
             <button type="button" id="upload" name="image" class="layui-btn layui-upload" lay-type="image" lay-data="{ exts:'jpg|png|gif|jpeg|ico', accept:'image'}"><i class="layui-icon"></i>请上传图片</button>
             <input type="hidden" class="upload-input" name="image" value="">
             <img src="" style="display:none;border-radius:5px;border:1px solid #ccc" width="36" height="36">
+            <span style="color: #C8C8C8;">&nbsp;&nbsp;上传尺寸(1420*520像素)</span>
         </div>
     </div>
 
     <div class="layui-form-item">
         <label class="layui-form-label">主视频</label>
-        <div class="layui-input-inline upload">
+        <div class="layui-input-inline upload" style="width: 400px;">
             <button type="button" class="layui-btn" id="video"><i class="layui-icon"></i>请上传视频</button>
-            <input type="text" style="display:none;" class="upload-input" id="video_file" name="video" value="">
+            <input type="text" style="display:inline;width: 200px;" class="upload-input layui-input" id="video_file" name="video" value="">
         </div>
     </div>
 

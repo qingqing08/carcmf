@@ -212,9 +212,20 @@ class Video extends Admin
             return $this->success('添加成功');
         }
 
-        $video_list = Db::table('c_videos')->select();
-        $this->assign('video_list' , $video_list);
+//        $video_list = Db::table('c_videos')->select();
+//        $this->assign('video_list' , $video_list);
+        $category_list = Db::table('c_video_category')->select();
+        $this->assign('category_list' , $category_list);
         return $this->fetch();
+    }
+
+    //获取分类下的视频
+    public function get_video(){
+        $id = $this->request->post('id');
+
+        $childs = Db::table('c_videos')->where('vc_id' , $id)->select();
+
+        return $childs;
     }
 
 

@@ -8,13 +8,21 @@
 </style>
 <form class="layui-form" action="{:url()}" method="post">
     <div class="layui-form-item">
+        <label class="layui-form-label">选择分类</label>
+        <div class="layui-input-inline">
+            <select name="" id="category_id" lay-filter="label" class="select classifySelect">
+                <option value="">请选择分类</option>
+                {volist name="category_list" id="vo"}
+                <option value="{$vo.id}">{$vo.name}</option>
+                {/volist}
+            </select>
+        </div>
+    </div>
+    <div class="layui-form-item">
         <label class="layui-form-label">选择视频</label>
         <div class="layui-input-inline">
             <select name="data_id" id="data_id" class="field-type" type="select" lay-filter="type">
                 <option value="">请选择视频</option>
-                {volist name="video_list" id="vo"}
-                <option value="{$vo.id}">{$vo.video_name}</option>
-                {/volist}
             </select>
         </div>
     </div>
@@ -68,6 +76,29 @@
         });
         // 日期渲染
         laydate.render({elem: '.layui-date'});
+
+        layui.form.on("select(label)",function() {
+            category = $("#category_id").val();
+            // console.log(category);
+            $.ajax({
+                type:"post",
+                url:"get_video.html",
+                data:{id:category},
+                async:false,
+                cache:false,
+                success:function (res) {
+                    // console.log(res);
+                    cate_html = '';
+                    $(res).each(function (i) {
+                        cate_html +="<option value=''>请选择视频</option><option value='"+this.id+"'>"+this.video_name+"</option>";
+                    });
+                    // console.log(cate_html);
+                    $('#data_id').html(cate_html);
+                    layui.form.render('select'); //这个很重要
+                }
+            });
+
+        })
     });
 
 

@@ -138,7 +138,7 @@ class LaboratoryVideo extends Admin
             $ids = $this->request->post('id');
 
             $id_str = implode(',' , $ids);
-            $res = Db::table('c_product')->where('id' , 'in' , $id_str)->delete();
+            $res = Db::table('c_laboratory_video')->where('id' , 'in' , $id_str)->delete();
             if (!$res){
                 return $this->error('删除失败');
             }
@@ -147,7 +147,7 @@ class LaboratoryVideo extends Admin
         }
         $id = get_num();
 
-        $res = Db::table('c_product')->where('id' , $id)->delete();
+        $res = Db::table('c_laboratory_video')->where('id' , $id)->delete();
         if (!$res){
             return $this->error('删除失败');
         }
